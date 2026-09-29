@@ -1,0 +1,45 @@
+{
+    "name": "acmecorp/reference-extension",
+    "description": "📦 This Bolt extension can be used as a starting point to base your own extensions on.",
+    "type": "bolt-extension",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "YourNameHere",
+            "email": "youremail@acme.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.2",
+        "twig/twig": "^3.3"
+    },
+    "require-dev": {
+        "bolt/core": "^6.0",
+        "phpstan/extension-installer": "1.4.3",
+        "phpstan/phpstan": "2.1.31",
+        "phpstan/phpstan-deprecation-rules": "2.0.3",
+        "rector/rector": "2.2.7",
+        "symplify/easy-coding-standard": "^13"
+    },
+    "autoload": {
+        "psr-4": {
+            "AcmeCorp\\ReferenceExtension\\": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "extra": {
+        "branch-alias": {
+            "dev-main": "2.0.x-dev"
+        },
+        "entrypoint": "AcmeCorp\\ReferenceExtension\\Extension"
+    },
+    "config": {
+        "allow-plugins": {
+            "symfony/flex": false,
+            "drupol/composer-packages": false,
+            "phpstan/extension-installer": true,
+            "symfony/runtime": true
+        }
+    }
+}
