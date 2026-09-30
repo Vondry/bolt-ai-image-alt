@@ -1,8 +1,6 @@
 # AI ALT for Bolt CMS
 
-<video src="ai-alt-generation-example.mp4" controls muted width="100%">
-  <a href="ai-alt-generation-example.mp4">Watch the example: generating ALT texts in the Bolt editor (MP4)</a>
-</video>
+https://github.com/user-attachments/assets/b706fbfe-d8c0-4efb-8617-0157b935d4d7
 
 Generates image ALT texts in the Bolt 6 admin, **in the editor's browser**:
 
