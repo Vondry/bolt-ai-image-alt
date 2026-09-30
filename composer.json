@@ -1,5 +1,5 @@
 {
-    "name": "tomvondracek/bolt-ai-alt",
+    "name": "tomvondracek/bolt-ai-image-alt",
     "description": "In-browser AI generation of image ALT texts for the Bolt CMS admin (Florence-2 + Chrome Translator API). No API costs, image data never leaves the browser.",
     "type": "bolt-extension",
     "license": "MIT",

@@ -30,7 +30,7 @@ Hugging Face (a few hundred MB) and cached by the browser.
 ## Installation
 
 ```bash
-composer require tomvondracek/bolt-ai-alt
+composer require tomvondracek/bolt-ai-image-alt
 bin/console extensions:configure
 ```
 
@@ -134,7 +134,7 @@ To try it in a Bolt project from a local checkout:
 
 ```bash
 composer config repositories.ai-alt '{"type":"path","url":"../bolt-ai-image-alt"}'
-composer require tomvondracek/bolt-ai-alt:@dev
+composer require tomvondracek/bolt-ai-image-alt:@dev
 bin/console extensions:configure
 ```
 
