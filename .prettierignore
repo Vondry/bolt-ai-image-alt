@@ -1,0 +1,19 @@
+public/
+var/
+vendor/
+node_modules/
+package-lock.json
+composer.lock
+# Prettier covers the UI stack only; PHP, Twig, YAML and the Composer/GitHub
+# files follow ECS and the Bolt conventions.
+*.php
+*.twig
+*.md
+*.yaml
+*.yml
+*.neon
+composer.json
+.github/
+.bob/
+config/
+tests/js/fixtures/

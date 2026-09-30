@@ -38,17 +38,20 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: [ '8.2', '8.3', '8.4' ]
+        php-version: [ '8.2', '8.3', '8.4', '8.5' ]
         actions:
           - name: Coding Standard
             # tip: add "--ansi" to commands in CI to make them full of colors
-            run: vendor/bin/ecs check src --ansi
+            run: vendor/bin/ecs check src tests/php --ansi
 
           - name: PHPStan
-            run: vendor/bin/phpstan analyse --ansi
+            run: vendor/bin/phpstan analyse --ansi --memory-limit=1G
 
           - name: Check composer.json and composer.lock
             run: composer validate --strict --ansi
+
+          - name: PHPUnit
+            run: vendor/bin/phpunit --coverage-text
     
     name: ${{ matrix.actions.name }} - PHP ${{ matrix.php-version }}
     runs-on: ubuntu-latest
@@ -61,7 +64,7 @@ jobs:
           # test the lowest version, to make sure checks pass on it
           php-version: ${{ matrix.php-version }}
           extensions: json, mbstring, pdo, curl, pdo_sqlite
-          coverage: none
+          coverage: pcov
           tools: symfony-cli
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -69,3 +72,30 @@ jobs:
       - run: composer install --no-progress --ansi
 
       - run: ${{ matrix.actions.run }}
+
+  javascript:
+    name: TypeScript, ESLint, Prettier, Vitest and build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run typecheck
+
+      - run: npm run lint
+
+      - run: npm run format:check
+
+      - run: npm run test:coverage
+
+      - run: npm run build
+
+      # public/ is committed so production needs no Node; make sure it matches the sources.
+      - name: Check that public/ is up to date
+        run: git diff --exit-code --stat -- public/

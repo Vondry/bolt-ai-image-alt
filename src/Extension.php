@@ -2,44 +2,63 @@
 
 declare(strict_types=1);
 
-namespace AcmeCorp\ReferenceExtension;
+namespace Tvondracek\AiAlt;
 
 use Bolt\Extension\BaseExtension;
+use Throwable;
+use Tvondracek\AiAlt\Widget\AiAltWidget;
 
 class Extension extends BaseExtension
 {
-    /**
-     * Return the full name of the extension
-     */
+    private ?AiAltConfig $aiAltConfig = null;
+
     public function getName(): string
     {
-        return 'AcmeCorp ReferenceExtension';
+        return 'AI ALT';
     }
 
-    /**
-     * Ran automatically, if the current request is in a browser.
-     * You can use this method to set up things in your extension.
-     *
-     * Note: This runs on every request. Make sure what happens here is quick
-     * and efficient.
-     */
     public function initialize(): void
     {
-        $this->addWidget(new ReferenceWidget());
+        $this->addTwigNamespace('ai-alt');
 
-        $this->addTwigNamespace('reference-extension');
-
-        $this->addListener('kernel.response', [new EventListener(), 'handleEvent']);
+        if ($this->getAiAltConfig()->enabled) {
+            $this->addWidget(new AiAltWidget());
+        }
     }
 
     /**
-     * Ran automatically, if the current request is from the command line (CLI).
-     * You can use this method to set up things in your extension.
-     *
-     * Note: This runs on every request. Make sure what happens here is quick
-     * and efficient.
+     * Runs on `composer require` / `bin/console extensions:configure`: copies
+     * the prebuilt JS, CSS and WASM files to `public/extensions/ai-alt/`.
      */
-    public function initializeCli(): void
+    public function install(): void
     {
+        (new AssetInstaller())->install($this->getBoltConfig()->getPath('web'));
+    }
+
+    public function getAiAltConfig(): AiAltConfig
+    {
+        return $this->aiAltConfig ??= AiAltConfig::fromArray($this->getConfig()->all());
+    }
+
+    public function getSiteDefaultLocale(): string
+    {
+        try {
+            $locale = $this->getContainer()
+                ->getParameter('locale');
+        } catch (Throwable) {
+            $locale = null;
+        }
+
+        return is_string($locale) && $locale !== '' ? $locale : 'en';
+    }
+
+    /**
+     * Cache-busting token for the browser assets, changes with every build.
+     */
+    public static function assetVersion(): string
+    {
+        $mtime = @filemtime(AssetInstaller::sourceDirectory() . '/ai-alt.js');
+
+        return $mtime === false ? '' : (string) $mtime;
     }
 }

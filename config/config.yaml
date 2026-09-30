@@ -1,3 +1,46 @@
-# Reference extension configuration file
+# AI ALT – configuration
+#
+# Image ALT texts are generated in the editor's browser (Florence-2 via
+# Transformers.js) and translated with the Chrome Translator API. No image data
+# is sent to third parties; only the model weights are downloaded (once, cached
+# by the browser).
 
-foo: Bar
+# Master switch.
+enabled: true
+
+# Generate automatically after an image is uploaded or picked, but only when the
+# alt field is empty. `false` = only the "Generate" button.
+auto_on_upload: true
+
+# Start loading the model in the background as soon as an edit page opens.
+prewarm_model: true
+
+# Hugging Face model id and Florence-2 task.
+model: onnx-community/Florence-2-base-ft
+task: '<CAPTION>'             # '<CAPTION>' | '<DETAILED_CAPTION>' | '<MORE_DETAILED_CAPTION>'
+
+# Where model weights come from. Use a path such as '/ai-alt-models' for
+# self-hosted weights (files laid out as {model}/config.json, {model}/onnx/*.onnx).
+# Don't put them inside /extensions/ai-alt/: `extensions:configure` replaces
+# that folder with the files shipped by the extension.
+model_host: https://huggingface.co
+
+# Thumbnail fed to the model: {width}×{height}×{fit}, served by Bolt's /thumbs route.
+thumbnail: '768×768×max'
+
+# Maximum length of the generated alt text, cut at a word boundary.
+max_length: 125
+
+# What to do when the browser cannot translate into the target language
+# (Firefox, Safari, mobile): `empty` leaves the alt empty, `english` writes the
+# English caption and marks it for translation.
+fallback_without_translator: empty
+
+# Optional allow/deny lists of ContentType slugs. Empty include = all.
+contenttypes:
+  include: []
+  exclude: []
+
+permissions:
+  # Role (or Bolt global permission) needed to open the batch page.
+  batch_page: ROLE_EDITOR

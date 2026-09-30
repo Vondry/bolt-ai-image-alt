@@ -1,1 +1,2 @@
-# An example of a services.yaml file in an extension
+# Services of this extension are registered automatically by Bolt
+# (see config/services_bolt.yaml in the project). Nothing to add here.

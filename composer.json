@@ -1,38 +1,49 @@
 {
-    "name": "acmecorp/reference-extension",
-    "description": "📦 This Bolt extension can be used as a starting point to base your own extensions on.",
+    "name": "tvondracek/bolt-ai-alt",
+    "description": "In-browser AI generation of image ALT texts for the Bolt CMS admin (Florence-2 + Chrome Translator API). No API costs, image data never leaves the browser.",
     "type": "bolt-extension",
     "license": "MIT",
+    "keywords": ["bolt", "bolt-extension", "alt", "accessibility", "ai", "florence-2"],
     "authors": [
         {
-            "name": "YourNameHere",
-            "email": "youremail@acme.com"
+            "name": "Tomas Vondracek",
+            "email": "tomasvondrac@gmail.com"
         }
     ],
     "require": {
         "php": ">=8.2",
-        "twig/twig": "^3.3"
+        "twig/twig": "^3.30"
     },
     "require-dev": {
-        "bolt/core": "^6.0",
+        "bolt/core": "^6.1.8",
         "phpstan/extension-installer": "1.4.3",
-        "phpstan/phpstan": "2.1.31",
-        "phpstan/phpstan-deprecation-rules": "2.0.3",
-        "rector/rector": "2.2.7",
-        "symplify/easy-coding-standard": "^13"
+        "phpstan/phpstan": "2.2.16",
+        "phpstan/phpstan-deprecation-rules": "2.0.5",
+        "phpunit/phpunit": "^11.5.56",
+        "rector/rector": "2.6.7",
+        "symplify/easy-coding-standard": "^13.3.2"
     },
     "autoload": {
         "psr-4": {
-            "AcmeCorp\\ReferenceExtension\\": "src/"
+            "Tvondracek\\AiAlt\\": "src/"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tvondracek\\AiAlt\\Tests\\": "tests/php/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "test:coverage": "XDEBUG_MODE=coverage phpunit --coverage-text --coverage-html var/coverage/php --coverage-clover var/coverage/php/clover.xml"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "extra": {
         "branch-alias": {
-            "dev-main": "2.0.x-dev"
+            "dev-main": "1.0.x-dev"
         },
-        "entrypoint": "AcmeCorp\\ReferenceExtension\\Extension"
+        "entrypoint": "Tvondracek\\AiAlt\\Extension"
     },
     "config": {
         "allow-plugins": {

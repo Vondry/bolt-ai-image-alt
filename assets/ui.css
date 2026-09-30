@@ -1,0 +1,102 @@
+.ai-alt-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.35rem;
+}
+
+.ai-alt-controls.is-busy .ai-alt-button .fa-magic {
+    animation: ai-alt-pulse 1s ease-in-out infinite alternate;
+}
+
+.ai-alt-chip {
+    display: inline-block;
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    background: #e9ecef;
+    color: #343a40;
+}
+
+.ai-alt-chip[hidden] {
+    display: none;
+}
+
+.ai-alt-chip[data-state='ok'] {
+    background: #d1e7dd;
+    color: #0f5132;
+}
+
+.ai-alt-chip[data-state='warn'] {
+    background: #fff3cd;
+    color: #664d03;
+}
+
+.ai-alt-chip[data-state='error'] {
+    background: #f8d7da;
+    color: #842029;
+}
+
+input[data-ai-alt='generated'] {
+    border-color: #6f42c1;
+    box-shadow: inset 3px 0 0 #6f42c1;
+}
+
+.ai-alt-notice {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 2000;
+    max-width: 24rem;
+}
+
+.ai-alt-batch__toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.ai-alt-batch__select {
+    width: auto;
+}
+
+.ai-alt-batch__thumb {
+    width: 120px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 4px;
+    background: #f1f3f5;
+}
+
+.ai-alt-batch__table td {
+    vertical-align: middle;
+}
+
+.ai-alt-batch__table tr[data-status='saved'],
+.ai-alt-batch__table tr[data-status='skipped'],
+.ai-alt-batch__table tr[data-status='conflict'] {
+    opacity: 0.55;
+}
+
+.ai-alt-batch__table .ai-alt-chip {
+    margin-top: 0.25rem;
+}
+
+@keyframes ai-alt-pulse {
+    from {
+        opacity: 0.35;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ai-alt-controls.is-busy .ai-alt-button .fa-magic {
+        animation: none;
+    }
+}
