@@ -20,7 +20,7 @@ beforeAll(async () => {
 describe('worker model loading failure', () => {
     it('reports model-failed and allows a retry', async () => {
         fromPretrained.mockRejectedValueOnce(new Error('Network error while downloading')).mockResolvedValueOnce({});
-        const init = { type: 'init', model: 'm', modelHost: 'https://huggingface.co', ortBase: '/ort', task: '<CAPTION>' };
+        const init = { type: 'init', model: 'm', modelHost: 'https://huggingface.co', ortBase: '/ort' };
 
         self.dispatchEvent(new MessageEvent('message', { data: init }));
         await vi.waitFor(() => expect(posted).toHaveLength(1));

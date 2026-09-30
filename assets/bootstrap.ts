@@ -44,6 +44,7 @@ export function createServices(config: AiAltConfig, onProgress?: (loaded: number
     const translator = new TranslatorService();
     const provider = new BrowserFlorenceProvider(captioner, translator, {
         maxLength: config.maxLength,
+        maxLengths: config.maxLengths,
         fallback: config.fallbackWithoutTranslator,
     });
 

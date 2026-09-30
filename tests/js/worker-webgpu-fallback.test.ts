@@ -12,7 +12,7 @@ vi.mock('@huggingface/transformers', () => ({
 }));
 
 const posted: WorkerResponse[] = [];
-const init = { type: 'init', model: 'm', modelHost: 'https://huggingface.co', ortBase: '/ort', task: '<CAPTION>' };
+const init = { type: 'init', model: 'm', modelHost: 'https://huggingface.co', ortBase: '/ort' };
 
 beforeAll(async () => {
     vi.spyOn(self, 'postMessage').mockImplementation(((message: WorkerResponse) => posted.push(message)) as typeof self.postMessage);

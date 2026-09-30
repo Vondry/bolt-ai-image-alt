@@ -15,7 +15,9 @@ auto_on_upload: true
 # Start loading the model in the background as soon as an edit page opens.
 prewarm_model: true
 
-# Hugging Face model id and Florence-2 task.
+# Hugging Face model id and Florence-2 task: the default level of detail, used
+# by the "Generate ALT" button and automatic generation. Editors can pick another
+# level from the button's dropdown.
 model: onnx-community/Florence-2-base-ft
 task: '<CAPTION>'             # '<CAPTION>' | '<DETAILED_CAPTION>' | '<MORE_DETAILED_CAPTION>'
 
@@ -28,8 +30,12 @@ model_host: https://huggingface.co
 # Thumbnail fed to the model: {width}×{height}×{fit}, served by Bolt's /thumbs route.
 thumbnail: '768×768×max'
 
-# Maximum length of the generated alt text, cut at a word boundary.
-max_length: 125
+# Maximum length of the generated alt text per level of detail, cut at a
+# sentence or word boundary. A single number limits the default `task` only.
+max_length:
+  '<CAPTION>': 125
+  '<DETAILED_CAPTION>': 250
+  '<MORE_DETAILED_CAPTION>': 400
 
 # What to do when the browser cannot translate into the target language
 # (Firefox, Safari, mobile): `empty` leaves the alt empty, `english` writes the

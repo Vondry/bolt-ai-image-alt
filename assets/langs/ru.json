@@ -1,6 +1,11 @@
 {
     "generate": "Сгенерировать ALT",
     "generateTitle": "Описать изображение с помощью ИИ (работает в вашем браузере)",
+    "levelMenu": "Выбрать уровень детализации",
+    "levelShort": "Кратко",
+    "levelDetailed": "Подробно",
+    "levelMoreDetailed": "Очень подробно",
+    "levelDefault": "по умолчанию",
     "loadingModel": "Загрузка модели…",
     "loadingModelProgress": "Загрузка модели… {percent} %",
     "generating": "Генерация…",

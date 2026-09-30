@@ -33,7 +33,6 @@ describe('Captioner', () => {
             model: 'm',
             modelHost: 'https://hf',
             ortBase: '/ort',
-            task: '<CAPTION>',
             forceWasm: false,
         });
         expect(captioner.isReady).toBe(false);
@@ -58,12 +57,12 @@ describe('Captioner', () => {
         workers[0]!.emit({ type: 'ready', device: 'wasm' });
 
         const first = captioner.caption('/thumbs/a.jpg');
-        const second = captioner.caption('/thumbs/b.jpg');
+        const second = captioner.caption('/thumbs/b.jpg', '<DETAILED_CAPTION>');
         await flush();
 
         expect(workers[0]!.sent.slice(1)).toEqual([
-            { type: 'caption', id: 1, url: '/thumbs/a.jpg' },
-            { type: 'caption', id: 2, url: '/thumbs/b.jpg' },
+            { type: 'caption', id: 1, url: '/thumbs/a.jpg', task: '<CAPTION>' },
+            { type: 'caption', id: 2, url: '/thumbs/b.jpg', task: '<DETAILED_CAPTION>' },
         ]);
 
         workers[0]!.emit({ type: 'error', id: 2, message: 'Image too small', code: 'too-small' });

@@ -1,6 +1,11 @@
 {
     "generate": "ALT genereren",
     "generateTitle": "Afbeelding beschrijven met AI (draait in je browser)",
+    "levelMenu": "Detailniveau kiezen",
+    "levelShort": "Kort",
+    "levelDetailed": "Gedetailleerd",
+    "levelMoreDetailed": "Zeer gedetailleerd",
+    "levelDefault": "standaard",
     "loadingModel": "Model laden…",
     "loadingModelProgress": "Model laden… {percent} %",
     "generating": "Genereren…",

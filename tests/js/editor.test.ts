@@ -22,6 +22,8 @@ interface Setup {
     input(prefix: string, part: 'alt' | 'filename'): HTMLInputElement;
     chip(prefix: string): HTMLElement;
     button(prefix: string): HTMLButtonElement;
+    toggle(prefix: string): HTMLButtonElement;
+    menu(prefix: string): HTMLElement;
 }
 
 function setup(
@@ -55,6 +57,8 @@ function setup(
         input,
         chip: prefix => controls(prefix).querySelector<HTMLElement>('.ai-alt-chip')!,
         button: prefix => controls(prefix).querySelector<HTMLButtonElement>('.ai-alt-button')!,
+        toggle: prefix => controls(prefix).querySelector<HTMLButtonElement>('.ai-alt-toggle')!,
+        menu: prefix => controls(prefix).querySelector<HTMLElement>('.ai-alt-menu')!,
     };
 }
 
@@ -115,7 +119,10 @@ describe('EditorController', () => {
         expect(s.button('fields[image]').disabled).toBe(true);
         await settle(s);
 
-        expect(s.deps.provider.generate).toHaveBeenCalledWith('/thumbs/768×768×max/2024/05/bagr%201.jpg', { language: 'cs' });
+        expect(s.deps.provider.generate).toHaveBeenCalledWith('/thumbs/768×768×max/2024/05/bagr%201.jpg', {
+            language: 'cs',
+            task: '<CAPTION>',
+        });
         const alt = s.input('fields[image]', 'alt');
         expect(alt.value).toBe('A yellow excavator');
         expect(alt.dataset.aiAlt).toBe(GENERATED_MARKER);
@@ -131,7 +138,7 @@ describe('EditorController', () => {
         upload(s, 'fields[gallery][0]', 'g.jpg');
         await settle(s);
 
-        expect(s.deps.provider.generate).toHaveBeenCalledWith(expect.any(String), { language: 'en' });
+        expect(s.deps.provider.generate).toHaveBeenCalledWith(expect.any(String), { language: 'en', task: '<CAPTION>' });
     });
 
     it('never overwrites an alt the editor already has', async () => {
@@ -218,6 +225,67 @@ describe('EditorController', () => {
         expect(s.input('fields[image]', 'alt').value).toBe('A yellow excavator');
     });
 
+    it('offers every level of detail in a dropdown, marking the configured default', () => {
+        const s = setup(imageFieldHtml('fields[image]', 'a.jpg'), { task: '<DETAILED_CAPTION>' });
+        s.controller.scan();
+
+        const items = [...s.menu('fields[image]').querySelectorAll<HTMLButtonElement>('[role="menuitem"]')];
+        expect(items.map(item => item.dataset.value)).toEqual(['<CAPTION>', '<DETAILED_CAPTION>', '<MORE_DETAILED_CAPTION>']);
+        expect(items.map(item => item.textContent)).toEqual(['Short', 'Detailed default', 'Very detailed']);
+        expect(s.toggle('fields[image]').getAttribute('aria-label')).toBe('Choose the level of detail');
+    });
+
+    it('generates with the level picked from the dropdown', async () => {
+        const s = setup(imageFieldHtml('fields[image]', 'a.jpg', 'Old text'));
+        s.controller.scan();
+        const toggle = s.toggle('fields[image]');
+        const menu = s.menu('fields[image]');
+
+        toggle.click();
+        expect(menu.classList.contains('show')).toBe(true);
+        expect(toggle.getAttribute('aria-expanded')).toBe('true');
+
+        menu.querySelector<HTMLButtonElement>('[data-value="<MORE_DETAILED_CAPTION>"]')!.click();
+        expect(menu.classList.contains('show')).toBe(false);
+        expect(s.deps.primeTranslator).toHaveBeenCalledWith(['cs']);
+        await settle(s);
+
+        expect(s.deps.provider.generate).toHaveBeenCalledWith(expect.any(String), { language: 'cs', task: '<MORE_DETAILED_CAPTION>' });
+        expect(s.input('fields[image]', 'alt').value).toBe('A yellow excavator');
+    });
+
+    it('closes the dropdown on an outside click, Escape and while generating', async () => {
+        const gate = deferred<AltOutcome>();
+        const s = setup(imageFieldHtml('fields[image]', 'a.jpg'), {}, () => gate.promise);
+        s.controller.scan();
+        const toggle = s.toggle('fields[image]');
+        const menu = s.menu('fields[image]');
+        const items = [...menu.querySelectorAll<HTMLButtonElement>('[role="menuitem"]')];
+
+        toggle.click();
+        expect(document.activeElement).toBe(items[0]);
+        document.body.click();
+        expect(menu.classList.contains('show')).toBe(false);
+
+        toggle.click();
+        menu.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true }));
+        expect(document.activeElement).toBe(items[2]);
+        menu.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+        expect(document.activeElement).toBe(items[0]);
+        menu.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+        expect(menu.classList.contains('show')).toBe(false);
+        expect(document.activeElement).toBe(toggle);
+
+        toggle.click();
+        s.button('fields[image]').click();
+        expect(menu.classList.contains('show')).toBe(false);
+        expect(toggle.disabled).toBe(true);
+
+        gate.resolve(ok('x'));
+        await settle(s);
+        expect(toggle.disabled).toBe(false);
+    });
+
     it('ignores a click without an image and explains SVGs', async () => {
         const s = setup(imageFieldHtml('fields[image]') + imageFieldHtml('fields[gallery][0]', 'logo.svg'));
         s.controller.scan();
@@ -280,7 +348,7 @@ describe('EditorController', () => {
         await flush(10);
 
         expect(s.deps.primeTranslator).toHaveBeenCalledWith(['cs']);
-        expect(s.deps.provider.localize).toHaveBeenCalledWith('A dog', 'cs');
+        expect(s.deps.provider.localize).toHaveBeenCalledWith('A dog', 'cs', '<CAPTION>');
         expect(s.input('fields[image]', 'alt').value).toBe('[cs] A dog');
 
         // Later clicks do nothing.
@@ -539,7 +607,7 @@ describe('EditorController', () => {
         upload(s, 'fields[image]', 'a.jpg');
         await settle(s);
 
-        expect(s.deps.provider.generate).toHaveBeenCalledWith('/cms/thumbs/768×768×max/a.jpg', { language: 'cs' });
+        expect(s.deps.provider.generate).toHaveBeenCalledWith('/cms/thumbs/768×768×max/a.jpg', { language: 'cs', task: '<CAPTION>' });
     });
 });
 

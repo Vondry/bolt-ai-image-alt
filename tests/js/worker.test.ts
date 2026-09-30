@@ -168,7 +168,7 @@ describe('worker helpers', () => {
 
 describe('worker messages', () => {
     it('reports an error for captions before init', async () => {
-        send({ type: 'caption', id: 1, url: '/thumbs/a.jpg' });
+        send({ type: 'caption', id: 1, url: '/thumbs/a.jpg', task: '<CAPTION>' });
         await waitFor(() => posted.length > 0);
         expect(posted[0]).toMatchObject({ type: 'error', id: 1, message: 'Model not initialised' });
     });
@@ -188,7 +188,6 @@ describe('worker messages', () => {
             model: 'onnx-community/Florence-2-base-ft',
             modelHost: 'https://huggingface.co',
             ortBase: '/ort',
-            task: '<CAPTION>',
         });
         await waitFor(() => posted.some(m => m.type === 'ready'));
 
@@ -199,12 +198,12 @@ describe('worker messages', () => {
             expect.objectContaining({ dtype: 'q8', device: 'wasm' }),
         );
 
-        send({ type: 'init', model: 'x', modelHost: 'https://huggingface.co', ortBase: '/ort', task: '<CAPTION>' });
+        send({ type: 'init', model: 'x', modelHost: 'https://huggingface.co', ortBase: '/ort' });
         await waitFor(() => posted.filter(m => m.type === 'ready').length === 2);
         expect(transformers.fromPretrained).toHaveBeenCalledTimes(1);
 
         posted.length = 0;
-        send({ type: 'caption', id: 7, url: '/thumbs/768×768×max/a.jpg' });
+        send({ type: 'caption', id: 7, url: '/thumbs/768×768×max/a.jpg', task: '<CAPTION>' });
         await waitFor(() => posted.length > 0);
 
         expect(posted[0]).toMatchObject({ type: 'result', id: 7, text: 'a yellow excavator' });
@@ -215,6 +214,14 @@ describe('worker messages', () => {
             '<CAPTION>',
             [480, 640],
         );
+        expect(transformers.model.generate).toHaveBeenLastCalledWith(expect.objectContaining({ max_new_tokens: 100 }));
+
+        posted.length = 0;
+        send({ type: 'caption', id: 13, url: '/thumbs/768×768×max/a.jpg', task: '<MORE_DETAILED_CAPTION>' });
+        await waitFor(() => posted.length > 0);
+
+        expect(transformers.processor).toHaveBeenLastCalledWith(transformers.image, '<MORE_DETAILED_CAPTION>');
+        expect(transformers.model.generate).toHaveBeenLastCalledWith(expect.objectContaining({ max_new_tokens: 300 }));
     });
 
     it('rejects failed downloads and tiny images with codes', async () => {
@@ -222,7 +229,7 @@ describe('worker messages', () => {
             'fetch',
             vi.fn(async () => new Response('', { status: 404 })),
         );
-        send({ type: 'caption', id: 8, url: '/thumbs/missing.jpg' });
+        send({ type: 'caption', id: 8, url: '/thumbs/missing.jpg', task: '<CAPTION>' });
         await waitFor(() => posted.length > 0);
         expect(posted[0]).toMatchObject({ type: 'error', id: 8, code: 'not-found', message: 'HTTP 404' });
 
@@ -231,7 +238,7 @@ describe('worker messages', () => {
             'fetch',
             vi.fn(async () => new Response('', { status: 500 })),
         );
-        send({ type: 'caption', id: 10, url: '/thumbs/broken.jpg' });
+        send({ type: 'caption', id: 10, url: '/thumbs/broken.jpg', task: '<CAPTION>' });
         await waitFor(() => posted.length > 0);
         expect(posted[0]).toMatchObject({ type: 'error', id: 10, code: 'fetch-failed', message: 'HTTP 500' });
 
@@ -241,7 +248,7 @@ describe('worker messages', () => {
             vi.fn(async () => new Response(new Blob(['img']))),
         );
         transformers.image = { width: 16, height: 16 };
-        send({ type: 'caption', id: 9, url: '/thumbs/tiny.png' });
+        send({ type: 'caption', id: 9, url: '/thumbs/tiny.png', task: '<CAPTION>' });
         await waitFor(() => posted.length > 0);
         expect(posted[0]).toMatchObject({ type: 'error', id: 9, code: 'too-small' });
         transformers.image = { width: 640, height: 480 };
@@ -252,7 +259,7 @@ describe('worker messages', () => {
             'fetch',
             vi.fn(async () => new Response(readFileSync(PLACEHOLDER_PATH), { status: 200 })),
         );
-        send({ type: 'caption', id: 12, url: '/thumbs/768×768×max/deleted.jpg' });
+        send({ type: 'caption', id: 12, url: '/thumbs/768×768×max/deleted.jpg', task: '<CAPTION>' });
         await waitFor(() => posted.length > 0);
 
         expect(posted[0]).toMatchObject({ type: 'error', id: 12, code: 'not-found' });
@@ -260,14 +267,14 @@ describe('worker messages', () => {
 
     it('returns an empty caption for non-text results', async () => {
         transformers.processor.post_process_generation.mockReturnValueOnce({ '<CAPTION>': { labels: [] } } as never);
-        send({ type: 'caption', id: 10, url: '/thumbs/a.jpg' });
+        send({ type: 'caption', id: 10, url: '/thumbs/a.jpg', task: '<CAPTION>' });
         await waitFor(() => posted.length > 0);
         expect(posted[0]).toMatchObject({ type: 'result', id: 10, text: '' });
     });
 
     it('reports model errors as model-failed', async () => {
         transformers.model.generate.mockRejectedValueOnce(new Error('OOM'));
-        send({ type: 'caption', id: 11, url: '/thumbs/a.jpg' });
+        send({ type: 'caption', id: 11, url: '/thumbs/a.jpg', task: '<CAPTION>' });
         await waitFor(() => posted.length > 0);
         expect(posted[0]).toMatchObject({ type: 'error', id: 11, code: 'model-failed', message: 'OOM' });
     });

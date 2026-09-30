@@ -6,6 +6,8 @@ import type { FallbackMode } from './types';
 export interface AltContext {
     /** Target language, BCP 47 base (`cs`, `en`). */
     language: string;
+    /** Florence-2 task (level of detail); the captioner's default when omitted. */
+    task?: string;
 }
 
 export type AltOutcome =
@@ -26,8 +28,16 @@ export interface AltProvider {
     generate(imageUrl: string, context: AltContext): Promise<AltOutcome>;
 }
 
+export interface ProviderOptions {
+    /** Limit for the default task. */
+    maxLength: number;
+    /** Limit per task, for the levels picked from the dropdown. */
+    maxLengths?: Record<string, number>;
+    fallback: FallbackMode;
+}
+
 export interface CaptionSource {
-    caption(url: string): Promise<CaptionResult>;
+    caption(url: string, task?: string): Promise<CaptionResult>;
 }
 
 export interface TranslationSource {
@@ -38,24 +48,24 @@ export class BrowserFlorenceProvider implements AltProvider {
     constructor(
         private readonly captioner: CaptionSource,
         private readonly translator: TranslationSource,
-        private readonly options: { maxLength: number; fallback: FallbackMode },
+        private readonly options: ProviderOptions,
     ) {}
 
     async generate(imageUrl: string, context: AltContext): Promise<AltOutcome> {
-        const { text, ms } = await this.captioner.caption(imageUrl);
-        const english = cleanCaption(text, this.options.maxLength);
+        const { text, ms } = await this.captioner.caption(imageUrl, context.task);
+        const english = cleanCaption(text, this.lengthFor(context.task));
 
-        return this.localize(english, context.language, ms);
+        return this.localize(english, context.language, context.task, ms);
     }
 
     /** Translate an already generated English caption (e.g. after a click unlocked the translator). */
-    async localize(english: string, language: string, ms = 0): Promise<AltOutcome> {
+    async localize(english: string, language: string, task?: string, ms = 0): Promise<AltOutcome> {
         const translation = await this.translator.translate(english, language);
 
         switch (translation.status) {
             case 'identity':
             case 'translated':
-                return { status: 'ok', alt: finalize(translation.text, this.options.maxLength), english, ms };
+                return { status: 'ok', alt: finalize(translation.text, this.lengthFor(task)), english, ms };
             case 'needs-gesture':
                 return { status: 'needs-gesture', english, ms };
             case 'unavailable':
@@ -64,12 +74,13 @@ export class BrowserFlorenceProvider implements AltProvider {
                     : { status: 'untranslated', english, ms };
         }
     }
+
+    /** The task's own limit; the default task's limit when there is none. */
+    private lengthFor(task: string | undefined): number {
+        return (task !== undefined ? this.options.maxLengths?.[task] : undefined) ?? this.options.maxLength;
+    }
 }
 
-export function createProvider(
-    captioner: Captioner,
-    translator: TranslatorService,
-    options: { maxLength: number; fallback: FallbackMode },
-): BrowserFlorenceProvider {
+export function createProvider(captioner: Captioner, translator: TranslatorService, options: ProviderOptions): BrowserFlorenceProvider {
     return new BrowserFlorenceProvider(captioner, translator, options);
 }

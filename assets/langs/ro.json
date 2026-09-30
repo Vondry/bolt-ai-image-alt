@@ -1,6 +1,11 @@
 {
     "generate": "Generează ALT",
     "generateTitle": "Descrieți imaginea cu AI (rulează în browserul dumneavoastră)",
+    "levelMenu": "Alegeți nivelul de detaliu",
+    "levelShort": "Scurt",
+    "levelDetailed": "Detaliat",
+    "levelMoreDetailed": "Foarte detaliat",
+    "levelDefault": "implicit",
     "loadingModel": "Se încarcă modelul…",
     "loadingModelProgress": "Se încarcă modelul… {percent} %",
     "generating": "Se generează…",

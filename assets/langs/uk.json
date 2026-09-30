@@ -1,6 +1,11 @@
 {
     "generate": "Згенерувати ALT",
     "generateTitle": "Описати зображення за допомогою ШІ (працює у вашому браузері)",
+    "levelMenu": "Вибрати рівень деталізації",
+    "levelShort": "Стисло",
+    "levelDetailed": "Детально",
+    "levelMoreDetailed": "Дуже детально",
+    "levelDefault": "за замовчуванням",
     "loadingModel": "Завантаження моделі…",
     "loadingModelProgress": "Завантаження моделі… {percent} %",
     "generating": "Генерування…",

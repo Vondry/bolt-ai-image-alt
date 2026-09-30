@@ -1,6 +1,11 @@
 {
     "generate": "ALT generieren",
     "generateTitle": "Bild mit KI beschreiben (läuft in Ihrem Browser)",
+    "levelMenu": "Detailgrad wählen",
+    "levelShort": "Kurz",
+    "levelDetailed": "Ausführlich",
+    "levelMoreDetailed": "Sehr ausführlich",
+    "levelDefault": "Standard",
     "loadingModel": "Modell wird geladen…",
     "loadingModelProgress": "Modell wird geladen… {percent} %",
     "generating": "Wird generiert…",

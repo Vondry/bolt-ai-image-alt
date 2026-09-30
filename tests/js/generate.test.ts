@@ -21,7 +21,7 @@ describe('BrowserFlorenceProvider', () => {
             english: 'A yellow excavator',
             ms: 1200,
         });
-        expect(captioner.caption).toHaveBeenCalledWith('/thumbs/x.jpg');
+        expect(captioner.caption).toHaveBeenCalledWith('/thumbs/x.jpg', undefined);
         expect(translator.translate).toHaveBeenCalledWith('A yellow excavator', 'cs');
     });
 
@@ -52,6 +52,32 @@ describe('BrowserFlorenceProvider', () => {
     it('reports when a user gesture is needed', async () => {
         const { provider: p } = provider({ status: 'needs-gesture' });
         await expect(p.generate('/x', { language: 'cs' })).resolves.toMatchObject({ status: 'needs-gesture' });
+    });
+
+    it('uses the picked level and its length limit', async () => {
+        const detailed = 'The image shows a yellow excavator on a construction site. It is digging a hole next to a pile of sand.';
+        const captioner = { caption: vi.fn(async () => ({ text: detailed, ms: 3000 })) };
+        const translator = { translate: vi.fn(async (text: string) => ({ status: 'identity' as const, text })) };
+        const p = new BrowserFlorenceProvider(captioner, translator, {
+            maxLength: 40,
+            maxLengths: { '<CAPTION>': 40, '<DETAILED_CAPTION>': 80 },
+            fallback: 'empty',
+        });
+
+        await expect(p.generate('/x', { language: 'en', task: '<DETAILED_CAPTION>' })).resolves.toMatchObject({
+            alt: 'A yellow excavator on a construction site',
+        });
+        expect(captioner.caption).toHaveBeenCalledWith('/x', '<DETAILED_CAPTION>');
+
+        await expect(p.generate('/x', { language: 'en', task: '<CAPTION>' })).resolves.toMatchObject({
+            alt: 'A yellow excavator on a construction',
+        });
+        await expect(p.localize(detailed, 'en', '<DETAILED_CAPTION>')).resolves.toMatchObject({
+            alt: 'The image shows a yellow excavator on a construction site',
+        });
+        await expect(p.localize(detailed, 'en', '<MORE_DETAILED_CAPTION>')).resolves.toMatchObject({
+            alt: 'The image shows a yellow excavator on a',
+        });
     });
 
     it('localize() translates an existing caption', async () => {

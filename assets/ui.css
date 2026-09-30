@@ -6,6 +6,27 @@
     margin-top: 0.35rem;
 }
 
+.ai-alt-split {
+    position: relative;
+}
+
+/* Bootstrap positions menus with Popper; ours opens without it, below the button. */
+.ai-alt-menu {
+    top: 100%;
+    left: 0;
+    margin-top: 0.125rem;
+}
+
+.ai-alt-menu.show {
+    display: block;
+}
+
+.ai-alt-menu__hint {
+    margin-left: 0.25rem;
+    font-size: 0.8em;
+    opacity: 0.65;
+}
+
 .ai-alt-controls.is-busy .ai-alt-button .fa-magic {
     animation: ai-alt-pulse 1s ease-in-out infinite alternate;
 }

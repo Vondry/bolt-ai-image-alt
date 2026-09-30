@@ -1,6 +1,11 @@
 {
     "generate": "Generovat ALT",
     "generateTitle": "Popsat obrázek pomocí AI (běží ve vašem prohlížeči)",
+    "levelMenu": "Vybrat míru podrobnosti",
+    "levelShort": "Stručně",
+    "levelDetailed": "Podrobně",
+    "levelMoreDetailed": "Velmi podrobně",
+    "levelDefault": "výchozí",
     "loadingModel": "Načítám model…",
     "loadingModelProgress": "Načítám model… {percent} %",
     "generating": "Generuji…",

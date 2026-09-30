@@ -28,6 +28,9 @@ export function describeCaptionError(error: unknown, t: Translate): { text: stri
     return { text: t('error', { message: (error as Error)?.message ?? String(error) }), warn: false };
 }
 
+/** Florence-2 caption tasks, from the shortest to the longest description. */
+export const TASKS = ['<CAPTION>', '<DETAILED_CAPTION>', '<MORE_DETAILED_CAPTION>'] as const;
+
 export interface CaptionResult {
     text: string;
     ms: number;
@@ -36,6 +39,7 @@ export interface CaptionResult {
 export interface CaptionerOptions {
     model: string;
     modelHost: string;
+    /** Default task, when caption() gets none. */
     task: string;
     /** URL of the directory with the self-hosted ONNX Runtime files. */
     ortBase: string;
@@ -116,12 +120,11 @@ export class Captioner {
             model: this.options.model,
             modelHost: this.options.modelHost,
             ortBase: this.options.ortBase,
-            task: this.options.task,
             forceWasm: this.forceWasm,
         });
     }
 
-    async caption(url: string): Promise<CaptionResult> {
+    async caption(url: string, task: string = this.options.task): Promise<CaptionResult> {
         await this.init();
 
         const id = this.nextId++;
@@ -131,7 +134,7 @@ export class Captioner {
                 this.options.timeoutMs ?? DEFAULT_CAPTION_TIMEOUT_MS,
             );
             this.pending.set(id, { resolve, reject, timer });
-            this.worker?.postMessage({ type: 'caption', id, url });
+            this.worker?.postMessage({ type: 'caption', id, url, task });
         });
     }
 

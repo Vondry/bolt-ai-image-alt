@@ -12,6 +12,18 @@ final readonly class AiAltConfig
     public const FALLBACK_EMPTY = 'empty';
     public const FALLBACK_ENGLISH = 'english';
     public const TASKS = ['<CAPTION>', '<DETAILED_CAPTION>', '<MORE_DETAILED_CAPTION>'];
+
+    /**
+     * Longer captions for the more detailed levels, so picking one in the
+     * "Generate ALT" dropdown isn't cut back to one short sentence.
+     */
+    public const DEFAULT_MAX_LENGTHS = [
+        '<CAPTION>' => 125,
+        '<DETAILED_CAPTION>' => 250,
+        '<MORE_DETAILED_CAPTION>' => 400,
+    ];
+
+    private const MIN_MAX_LENGTH = 16;
     private const DEFAULTS = [
         'enabled' => true,
         'auto_on_upload' => true,
@@ -20,7 +32,6 @@ final readonly class AiAltConfig
         'task' => '<CAPTION>',
         'model_host' => 'https://huggingface.co',
         'thumbnail' => '768×768×max',
-        'max_length' => 125,
         'fallback_without_translator' => self::FALLBACK_EMPTY,
         'contenttypes' => [
             'include' => [],
@@ -32,6 +43,7 @@ final readonly class AiAltConfig
     ];
 
     /**
+     * @param array<string, int> $maxLengths per task
      * @param list<string> $includeContentTypes
      * @param list<string> $excludeContentTypes
      */
@@ -43,7 +55,9 @@ final readonly class AiAltConfig
         public string $task,
         public string $modelHost,
         public string $thumbnail,
+        /** Limit for the default `task`. */
         public int $maxLength,
+        public array $maxLengths,
         public string $fallbackWithoutTranslator,
         public array $includeContentTypes,
         public array $excludeContentTypes,
@@ -69,8 +83,7 @@ final readonly class AiAltConfig
             $fallback = self::FALLBACK_EMPTY;
         }
 
-        $maxLength = $config['max_length'] ?? self::DEFAULTS['max_length'];
-        $maxLength = is_numeric($maxLength) ? max(16, (int) $maxLength) : self::DEFAULTS['max_length'];
+        $maxLengths = self::maxLengths($config['max_length'] ?? null, $task);
 
         $batchPermission = $permissions['batch_page'] ?? null;
 
@@ -82,7 +95,8 @@ final readonly class AiAltConfig
             task: $task,
             modelHost: mb_rtrim(self::string($config, 'model_host', self::DEFAULTS['model_host']), '/'),
             thumbnail: self::string($config, 'thumbnail', self::DEFAULTS['thumbnail']),
-            maxLength: $maxLength,
+            maxLength: $maxLengths[$task],
+            maxLengths: $maxLengths,
             fallbackWithoutTranslator: $fallback,
             includeContentTypes: self::stringList($contentTypes['include'] ?? []),
             excludeContentTypes: self::stringList($contentTypes['exclude'] ?? []),
@@ -117,8 +131,39 @@ final readonly class AiAltConfig
             'modelHost' => $this->modelHost,
             'thumbnail' => $this->thumbnail,
             'maxLength' => $this->maxLength,
+            'maxLengths' => $this->maxLengths,
             'fallbackWithoutTranslator' => $this->fallbackWithoutTranslator,
         ];
+    }
+
+    /**
+     * `max_length` is either a number, which limits the default `task` (the
+     * other levels keep their defaults), or a map of task => number.
+     *
+     * @return array<string, int>
+     */
+    private static function maxLengths(mixed $value, string $task): array
+    {
+        $lengths = self::DEFAULT_MAX_LENGTHS;
+
+        if (is_numeric($value)) {
+            $value = [
+                $task => $value,
+            ];
+        }
+
+        if (! is_array($value)) {
+            return $lengths;
+        }
+
+        foreach (self::TASKS as $name) {
+            $length = $value[$name] ?? null;
+            if (is_numeric($length)) {
+                $lengths[$name] = max(self::MIN_MAX_LENGTH, (int) $length);
+            }
+        }
+
+        return $lengths;
     }
 
     /**

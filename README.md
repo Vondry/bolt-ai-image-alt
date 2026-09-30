@@ -15,7 +15,8 @@ Hugging Face (a few hundred MB) and cached by the browser.
 ## Features
 
 - **"Generate ALT" button** under every image alt input (`image` fields without `alt: false`, and every
-  `imagelist` item, including images inside collections and sets).
+  `imagelist` item, including images inside collections and sets). The main click uses the configured `task`;
+  its dropdown lets the editor pick a level of detail (short / detailed / very detailed) for that image.
 - **Automatic generation** right after an image is uploaded, picked from the library or uploaded from a URL.
   An alt is filled **only if it is empty**, and never replaced if the editor typed something in the meantime.
 - **Correct language**: localized fields use the edit locale, others use the ContentType's first locale or the site
@@ -46,10 +47,13 @@ enabled: true
 auto_on_upload: true          # false = button only
 prewarm_model: true           # start loading the model when an edit page opens
 model: onnx-community/Florence-2-base-ft
-task: '<CAPTION>'             # '<DETAILED_CAPTION>' / '<MORE_DETAILED_CAPTION>' = longer, slower
+task: '<CAPTION>'             # default level; '<DETAILED_CAPTION>' / '<MORE_DETAILED_CAPTION>' = longer, slower
 model_host: https://huggingface.co
 thumbnail: '768×768×max'
-max_length: 125
+max_length:                   # per level; a single number limits the default `task` only
+  '<CAPTION>': 125
+  '<DETAILED_CAPTION>': 250
+  '<MORE_DETAILED_CAPTION>': 400
 fallback_without_translator: empty   # empty | english
 contenttypes:
   include: []

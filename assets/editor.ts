@@ -1,7 +1,7 @@
-import { describeCaptionError } from './captioner';
+import { describeCaptionError, TASKS } from './captioner';
 import { findImageFields, isEmpty, writeAlt, type ImageFieldPair } from './fields';
 import type { AltOutcome, AltProvider } from './generate';
-import type { Translate } from './i18n';
+import type { MessageKey, Translate } from './i18n';
 import { readEditLocale, resolveTargetLocale } from './locale';
 import { isCaptionable, thumbnailUrl } from './postprocess';
 import { JobQueue } from './queue';
@@ -9,6 +9,12 @@ import { createFieldUi, showNotice, type FieldUi } from './ui';
 import type { AiAltConfig } from './types';
 
 type Mode = 'auto' | 'manual';
+
+const TASK_LABELS: Record<(typeof TASKS)[number], MessageKey> = {
+    '<CAPTION>': 'levelShort',
+    '<DETAILED_CAPTION>': 'levelDetailed',
+    '<MORE_DETAILED_CAPTION>': 'levelMoreDetailed',
+};
 
 interface FieldState {
     pair: ImageFieldPair;
@@ -21,6 +27,7 @@ interface Job {
     filename: string;
     altAtEnqueue: string;
     mode: Mode;
+    task: string;
 }
 
 interface PendingTranslation {
@@ -28,10 +35,11 @@ interface PendingTranslation {
     filename: string;
     english: string;
     language: string;
+    task: string;
 }
 
 export interface EditorDeps {
-    provider: AltProvider & { localize(english: string, language: string): Promise<AltOutcome> };
+    provider: AltProvider & { localize(english: string, language: string, task?: string): Promise<AltOutcome> };
     /** Loads the model; used for pre-warming. */
     warmUp: () => Promise<unknown>;
     /** Called from user gestures so the Translator API may download language packs. */
@@ -45,8 +53,9 @@ export interface EditorDeps {
 export const GENERATED_MARKER = 'generated';
 
 /**
- * Enhances the Bolt content edit form: a "Generate ALT" button per image,
- * automatic generation after upload / library pick, and a save notice.
+ * Enhances the Bolt content edit form: a "Generate ALT" button per image (with
+ * a dropdown for the level of detail), automatic generation after upload /
+ * library pick, and a save notice.
  */
 export class EditorController {
     private readonly states = new Map<HTMLInputElement, FieldState>();
@@ -146,7 +155,8 @@ export class EditorController {
         }
     }
 
-    enqueue(state: FieldState, mode: Mode): boolean {
+    /** `task` = level of detail; the configured default unless picked from the dropdown. */
+    enqueue(state: FieldState, mode: Mode, task: string = this.config.task): boolean {
         const filename = state.pair.filename.value.trim();
 
         if (filename === '') {
@@ -169,7 +179,7 @@ export class EditorController {
         state.ui.setBusy(true);
         state.ui.setChip('busy', this.deps.t(this.queue.size > 0 ? 'queued' : 'generating'));
 
-        return this.queue.enqueue(key, { state, filename, altAtEnqueue: state.pair.alt.value, mode });
+        return this.queue.enqueue(key, { state, filename, altAtEnqueue: state.pair.alt.value, mode, task });
     }
 
     /** Update chips while the model downloads. */
@@ -190,13 +200,23 @@ export class EditorController {
     }
 
     private enhance(pair: ImageFieldPair): void {
-        const ui = createFieldUi(this.root.ownerDocument, this.deps.t('generate'), this.deps.t('generateTitle'));
+        const { t } = this.deps;
+        const generate = (task?: string): void => {
+            this.deps.primeTranslator([this.languageFor(state)]);
+            this.enqueue(state, 'manual', task);
+        };
+        const ui = createFieldUi(this.root.ownerDocument, t('generate'), t('generateTitle'), {
+            label: t('levelMenu'),
+            items: TASKS.map(task => ({
+                value: task,
+                label: t(TASK_LABELS[task]),
+                hint: task === this.config.task ? t('levelDefault') : undefined,
+            })),
+            onPick: generate,
+        });
         const state: FieldState = { pair, ui, lastFilename: pair.filename.value.trim() };
 
-        ui.button.addEventListener('click', () => {
-            this.deps.primeTranslator([this.languageFor(state)]);
-            this.enqueue(state, 'manual');
-        });
+        ui.button.addEventListener('click', () => generate());
 
         pair.alt.addEventListener('input', () => {
             // Our own write-back dispatches `input` too; only react to the editor typing.
@@ -225,6 +245,7 @@ export class EditorController {
             const language = this.languageFor(state);
             const outcome = await this.deps.provider.generate(thumbnailUrl(job.filename, this.config.thumbnail, this.config.thumbsBase), {
                 language,
+                task: job.task,
             });
 
             this.apply(state, job, outcome, language);
@@ -236,7 +257,12 @@ export class EditorController {
         }
     }
 
-    private apply(state: FieldState, job: Pick<Job, 'filename' | 'altAtEnqueue' | 'mode'>, outcome: AltOutcome, language: string): void {
+    private apply(
+        state: FieldState,
+        job: Pick<Job, 'filename' | 'altAtEnqueue' | 'mode' | 'task'>,
+        outcome: AltOutcome,
+        language: string,
+    ): void {
         const { pair, ui } = state;
 
         // Never overwrite what the editor typed meanwhile, nor a changed image.
@@ -263,7 +289,7 @@ export class EditorController {
                 ui.setChip('warn', this.deps.t('translatorUnavailable'));
                 break;
             case 'needs-gesture':
-                this.pendingTranslations.push({ state, filename: job.filename, english: outcome.english, language });
+                this.pendingTranslations.push({ state, filename: job.filename, english: outcome.english, language, task: job.task });
                 ui.setChip('warn', this.deps.t('translatorNeedsClick'));
                 break;
         }
@@ -283,7 +309,7 @@ export class EditorController {
             item.state.ui.setChip('busy', this.deps.t('translating'));
             this.localizing++;
             this.deps.provider
-                .localize(item.english, item.language)
+                .localize(item.english, item.language, item.task)
                 .then(outcome => {
                     // A click does not make the pack download instantly; keep waiting silently.
                     if (outcome.status === 'needs-gesture') {
@@ -291,7 +317,12 @@ export class EditorController {
                         item.state.ui.setChip('warn', this.deps.t('translatorNeedsClick'));
                         return;
                     }
-                    this.apply(item.state, { filename: item.filename, altAtEnqueue, mode: 'auto' }, outcome, item.language);
+                    this.apply(
+                        item.state,
+                        { filename: item.filename, altAtEnqueue, mode: 'auto', task: item.task },
+                        outcome,
+                        item.language,
+                    );
                 })
                 .catch(error => item.state.ui.setChip('error', this.deps.t('error', { message: String(error) })))
                 .finally(() => this.localizing--);

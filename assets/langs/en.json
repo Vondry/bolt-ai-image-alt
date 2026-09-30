@@ -1,6 +1,11 @@
 {
     "generate": "Generate ALT",
     "generateTitle": "Describe the image with AI (runs in your browser)",
+    "levelMenu": "Choose the level of detail",
+    "levelShort": "Short",
+    "levelDetailed": "Detailed",
+    "levelMoreDetailed": "Very detailed",
+    "levelDefault": "default",
     "loadingModel": "Loading model…",
     "loadingModelProgress": "Loading model… {percent} %",
     "generating": "Generating…",

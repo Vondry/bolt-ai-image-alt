@@ -34,13 +34,21 @@ export function capitalize(text: string): string {
     return text.charAt(0).toLocaleUpperCase() + text.slice(1);
 }
 
-/** Cut to `maxLength` characters, preferably at a word boundary. */
+/**
+ * Cut to `maxLength` characters, preferably after a whole sentence (detailed
+ * captions have several), else at a word boundary.
+ */
 export function truncate(text: string, maxLength: number): string {
     if (text.length <= maxLength) {
         return text;
     }
 
     const cut = text.slice(0, maxLength + 1);
+    const sentenceEnd = Math.max(cut.lastIndexOf('. '), cut.lastIndexOf('! '), cut.lastIndexOf('? '));
+    if (sentenceEnd > maxLength * 0.5) {
+        return cut.slice(0, sentenceEnd);
+    }
+
     const lastSpace = cut.lastIndexOf(' ');
     const shortened = lastSpace > maxLength * 0.5 ? cut.slice(0, lastSpace) : text.slice(0, maxLength);
 

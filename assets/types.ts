@@ -26,7 +26,10 @@ export interface AiAltConfig {
     task: string;
     modelHost: string;
     thumbnail: string;
+    /** Limit for the default `task`. */
     maxLength: number;
+    /** Limit per task; see `lengthFor()`. */
+    maxLengths?: Record<string, number>;
     fallbackWithoutTranslator: FallbackMode;
     contentType?: string;
     defaultLocale: string | null;
@@ -50,11 +53,10 @@ export type WorkerRequest =
           model: string;
           modelHost: string;
           ortBase: string;
-          task: string;
           /** Skip WebGPU: set when a previous worker failed on it. */
           forceWasm?: boolean;
       }
-    | { type: 'caption'; id: number; url: string };
+    | { type: 'caption'; id: number; url: string; task: string };
 
 /** Worker → main thread. */
 export type WorkerResponse =

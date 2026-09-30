@@ -1,6 +1,11 @@
 {
     "generate": "Générer l’ALT",
     "generateTitle": "Décrire l’image avec l’IA (s’exécute dans votre navigateur)",
+    "levelMenu": "Choisir le niveau de détail",
+    "levelShort": "Court",
+    "levelDetailed": "Détaillé",
+    "levelMoreDetailed": "Très détaillé",
+    "levelDefault": "par défaut",
     "loadingModel": "Chargement du modèle…",
     "loadingModelProgress": "Chargement du modèle… {percent} %",
     "generating": "Génération…",

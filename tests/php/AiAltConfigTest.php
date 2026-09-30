@@ -23,6 +23,7 @@ final class AiAltConfigTest extends TestCase
         self::assertSame('https://huggingface.co', $config->modelHost);
         self::assertSame('768×768×max', $config->thumbnail);
         self::assertSame(125, $config->maxLength);
+        self::assertSame(AiAltConfig::DEFAULT_MAX_LENGTHS, $config->maxLengths);
         self::assertSame(AiAltConfig::FALLBACK_EMPTY, $config->fallbackWithoutTranslator);
         self::assertSame([], $config->includeContentTypes);
         self::assertSame([], $config->excludeContentTypes);
@@ -60,10 +61,35 @@ final class AiAltConfigTest extends TestCase
         self::assertSame('/models', $config->modelHost);
         self::assertSame('512×512×max', $config->thumbnail);
         self::assertSame(80, $config->maxLength);
+        self::assertSame([
+            '<CAPTION>' => 125,
+            '<DETAILED_CAPTION>' => 80,
+            '<MORE_DETAILED_CAPTION>' => 400,
+        ], $config->maxLengths, 'a number limits the default task only');
         self::assertSame(AiAltConfig::FALLBACK_ENGLISH, $config->fallbackWithoutTranslator);
         self::assertSame(['pages', 'entries'], $config->includeContentTypes);
         self::assertSame(['blocks'], $config->excludeContentTypes);
         self::assertSame('ROLE_ADMIN', $config->batchPagePermission);
+    }
+
+    public function testMaxLengthPerTask(): void
+    {
+        $config = AiAltConfig::fromArray([
+            'task' => '<DETAILED_CAPTION>',
+            'max_length' => [
+                '<CAPTION>' => 100,
+                '<DETAILED_CAPTION>' => '300',
+                '<MORE_DETAILED_CAPTION>' => 'long',
+                '<OD>' => 50,
+            ],
+        ]);
+
+        self::assertSame(300, $config->maxLength);
+        self::assertSame([
+            '<CAPTION>' => 100,
+            '<DETAILED_CAPTION>' => 300,
+            '<MORE_DETAILED_CAPTION>' => 400,
+        ], $config->maxLengths);
     }
 
     /**
@@ -84,6 +110,8 @@ final class AiAltConfigTest extends TestCase
         yield 'unknown fallback' => [['fallback_without_translator' => 'german'], 'fallbackWithoutTranslator', 'empty'];
         yield 'non-numeric max length' => [['max_length' => 'long'], 'maxLength', 125];
         yield 'too small max length' => [['max_length' => 3], 'maxLength', 16];
+        yield 'max length map without the default task' => [['max_length' => ['<DETAILED_CAPTION>' => 200]], 'maxLength', 125];
+        yield 'max length as a list' => [['max_length' => [80]], 'maxLengths', AiAltConfig::DEFAULT_MAX_LENGTHS];
         yield 'empty model' => [['model' => '  '], 'model', 'onnx-community/Florence-2-base-ft'];
         yield 'non-string model' => [['model' => ['x']], 'model', 'onnx-community/Florence-2-base-ft'];
         yield 'empty permission' => [['permissions' => ['batch_page' => '']], 'batchPagePermission', 'ROLE_EDITOR'];
@@ -125,6 +153,7 @@ final class AiAltConfigTest extends TestCase
             'modelHost' => 'https://huggingface.co',
             'thumbnail' => '768×768×max',
             'maxLength' => 125,
+            'maxLengths' => AiAltConfig::DEFAULT_MAX_LENGTHS,
             'fallbackWithoutTranslator' => 'empty',
         ], $client);
     }

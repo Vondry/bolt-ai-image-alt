@@ -39,6 +39,15 @@ describe('truncate', () => {
         expect(truncate('one two three four', 12)).toBe('one two');
     });
 
+    it('prefers ending after a whole sentence', () => {
+        expect(truncate('A brown dog on a sandy beach. It runs after a ball', 40)).toBe('A brown dog on a sandy beach');
+        expect(truncate('A dog on a beach. The dog is brown! It runs after a ball', 40)).toBe('A dog on a beach. The dog is brown');
+    });
+
+    it('cuts at a word when the only sentence end would drop most of the text', () => {
+        expect(truncate('Hi. A brown dog runs after a red ball on a sandy beach', 30)).toBe('Hi. A brown dog runs after a');
+    });
+
     it('hard-cuts a single long word', () => {
         expect(truncate('abcdefghijklmnop', 5)).toBe('abcde');
     });

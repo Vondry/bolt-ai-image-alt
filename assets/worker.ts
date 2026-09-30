@@ -19,7 +19,6 @@ interface Loaded {
     model: Awaited<ReturnType<typeof Florence2ForConditionalGeneration.from_pretrained>>;
     processor: Processor;
     device: Device;
-    task: string;
 }
 
 const scope = self as unknown as DedicatedWorkerGlobalScope;
@@ -187,7 +186,7 @@ async function loadOn(request: InitRequest, info: DeviceInfo): Promise<Loaded> {
         AutoProcessor.from_pretrained(request.model, { progress_callback }),
     ]);
 
-    return { model, processor: processor as Processor, device, task: request.task };
+    return { model, processor: processor as Processor, device };
 }
 
 async function readImage(url: string): Promise<RawImage> {
@@ -222,11 +221,21 @@ async function readImage(url: string): Promise<RawImage> {
     return image;
 }
 
-async function caption(loaded: Loaded, url: string): Promise<string> {
+/**
+ * Room for each level: a detailed description needs more tokens than a short
+ * caption, and would otherwise stop mid-sentence.
+ */
+export const MAX_NEW_TOKENS: Record<string, number> = {
+    '<CAPTION>': 100,
+    '<DETAILED_CAPTION>': 200,
+    '<MORE_DETAILED_CAPTION>': 300,
+};
+
+async function caption(loaded: Loaded, url: string, task: string): Promise<string> {
     const image = await readImage(url);
-    const { model, processor, task } = loaded;
+    const { model, processor } = loaded;
     const inputs = await (processor as unknown as (image: RawImage, text: string) => Promise<Record<string, unknown>>)(image, task);
-    const generated = await model.generate({ ...inputs, max_new_tokens: 100 });
+    const generated = await model.generate({ ...inputs, max_new_tokens: MAX_NEW_TOKENS[task] ?? 100 });
     const text = processor.tokenizer.batch_decode(generated, { skip_special_tokens: false })[0] ?? '';
     const result = processor.post_process_generation(text, task, [image.height, image.width])[task];
 
@@ -256,7 +265,7 @@ async function handle(request: WorkerRequest): Promise<void> {
             if (!loading) {
                 throw new Error('Model not initialised');
             }
-            const text = await caption(await loading, request.url);
+            const text = await caption(await loading, request.url, request.task);
             post({ type: 'result', id: request.id, text, ms: Math.round(performance.now() - started) });
         } catch (error) {
             const err = error as Error & { code?: CaptionErrorCode };
