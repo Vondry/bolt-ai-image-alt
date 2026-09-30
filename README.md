@@ -1,6 +1,7 @@
 # AI ALT for Bolt CMS
 
-https://github.com/user-attachments/assets/b706fbfe-d8c0-4efb-8617-0157b935d4d7
+https://github.com/user-attachments/assets/bad597c5-481c-49e3-b9bd-765218955408
+
 
 Generates image ALT texts in the Bolt 6 admin, **in the editor's browser**:
 
