@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tvondracek\AiAlt\Service;
+namespace Tomvondracek\AiAlt\Service;
 
 use Bolt\Entity\Content;
 use Doctrine\ORM\EntityManagerInterface;

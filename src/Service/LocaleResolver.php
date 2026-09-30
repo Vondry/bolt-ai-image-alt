@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tvondracek\AiAlt\Service;
+namespace Tomvondracek\AiAlt\Service;
 
 /**
  * Decides which language an alt text has to be written in.

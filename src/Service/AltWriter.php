@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tvondracek\AiAlt\Service;
+namespace Tomvondracek\AiAlt\Service;
 
 use Bolt\Entity\Content;
 use Bolt\Entity\FieldTranslation;
@@ -12,8 +12,8 @@ use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Throwable;
-use Tvondracek\AiAlt\Exception\AltAlreadyFilledException;
-use Tvondracek\AiAlt\Exception\ImageNotFoundException;
+use Tomvondracek\AiAlt\Exception\AltAlreadyFilledException;
+use Tomvondracek\AiAlt\Exception\ImageNotFoundException;
 
 /**
  * Persists one alt text into a stored `image` / `imagelist` field value.

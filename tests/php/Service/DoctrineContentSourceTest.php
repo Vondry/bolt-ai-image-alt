@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tvondracek\AiAlt\Tests\Service;
+namespace Tomvondracek\AiAlt\Tests\Service;
 
 use Bolt\Entity\Content;
 use Bolt\Entity\Field;
@@ -11,8 +11,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\TestCase;
-use Tvondracek\AiAlt\Service\DoctrineContentSource;
-use Tvondracek\AiAlt\Tests\Fixtures;
+use Tomvondracek\AiAlt\Service\DoctrineContentSource;
+use Tomvondracek\AiAlt\Tests\Fixtures;
 
 final class DoctrineContentSourceTest extends TestCase
 {

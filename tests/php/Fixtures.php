@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tvondracek\AiAlt\Tests;
+namespace Tomvondracek\AiAlt\Tests;
 
 use Bolt\Configuration\Content\ContentType;
 use Bolt\Entity\Content;
@@ -10,7 +10,7 @@ use Bolt\Entity\Field;
 use Bolt\Entity\Field\ImageField;
 use Bolt\Entity\Field\ImagelistField;
 use Bolt\Entity\FieldTranslation;
-use Tvondracek\AiAlt\Service\ContentSource;
+use Tomvondracek\AiAlt\Service\ContentSource;
 
 /**
  * Builds real Bolt entities (no database) for tests.

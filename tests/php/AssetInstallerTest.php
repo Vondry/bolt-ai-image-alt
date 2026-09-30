@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tvondracek\AiAlt\Tests;
+namespace Tomvondracek\AiAlt\Tests;
 
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Symfony\Component\Filesystem\Filesystem;
-use Tvondracek\AiAlt\AssetInstaller;
+use Tomvondracek\AiAlt\AssetInstaller;
 
 final class AssetInstallerTest extends TestCase
 {

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tvondracek\AiAlt\Tests;
+namespace Tomvondracek\AiAlt\Tests;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use Tvondracek\AiAlt\AiAltConfig;
-use Tvondracek\AiAlt\AiAltConfigLoader;
+use Tomvondracek\AiAlt\AiAltConfig;
+use Tomvondracek\AiAlt\AiAltConfigLoader;
 
 final class AiAltConfigTest extends TestCase
 {

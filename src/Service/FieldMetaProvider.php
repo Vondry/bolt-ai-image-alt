@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tvondracek\AiAlt\Service;
+namespace Tomvondracek\AiAlt\Service;
 
 /**
  * Works out which fields of a ContentType carry an image ALT input, and whether

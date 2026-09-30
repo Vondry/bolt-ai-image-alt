@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tvondracek\AiAlt\Tests\Service;
+namespace Tomvondracek\AiAlt\Tests\Service;
 
 use Illuminate\Support\Collection;
 use PHPUnit\Framework\TestCase;
-use Tvondracek\AiAlt\Service\LocaleResolver;
+use Tomvondracek\AiAlt\Service\LocaleResolver;
 
 final class LocaleResolverTest extends TestCase
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tvondracek\AiAlt\Service;
+namespace Tomvondracek\AiAlt\Service;
 
 use Bolt\Configuration\Config;
 use Bolt\Entity\Content;
@@ -10,7 +10,7 @@ use Bolt\Entity\Field;
 use Bolt\Entity\FieldTranslation;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Throwable;
-use Tvondracek\AiAlt\AiAltConfigLoader;
+use Tomvondracek\AiAlt\AiAltConfigLoader;
 
 /**
  * Finds images in top-level `image` / `imagelist` fields that have a file but

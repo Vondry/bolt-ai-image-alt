@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tvondracek\AiAlt\Tests;
+namespace Tomvondracek\AiAlt\Tests;
 
 use Bolt\Configuration\Config;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
-use Tvondracek\AiAlt\AiAltConfigLoader;
+use Tomvondracek\AiAlt\AiAltConfigLoader;
 
 final class AiAltConfigLoaderTest extends TestCase
 {
@@ -39,8 +39,8 @@ final class AiAltConfigLoaderTest extends TestCase
 
     public function testProjectConfigAndLocalOverride(): void
     {
-        file_put_contents($this->dir . '/tvondracek-aialt.yaml', "max_length: 90\nauto_on_upload: false\n");
-        file_put_contents($this->dir . '/tvondracek-aialt_local.yaml', "max_length: 60\n");
+        file_put_contents($this->dir . '/tomvondracek-aialt.yaml', "max_length: 90\nauto_on_upload: false\n");
+        file_put_contents($this->dir . '/tomvondracek-aialt_local.yaml', "max_length: 60\n");
 
         $loader = $this->loader();
         $config = $loader->load();
@@ -52,7 +52,7 @@ final class AiAltConfigLoaderTest extends TestCase
 
     public function testLocalOverrideAppliesOnTopOfDefaults(): void
     {
-        file_put_contents($this->dir . '/tvondracek-aialt_local.yaml', "enabled: false\n");
+        file_put_contents($this->dir . '/tomvondracek-aialt_local.yaml', "enabled: false\n");
 
         self::assertFalse($this->loader()->load()->enabled);
     }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tvondracek\AiAlt\Tests\Service;
+namespace Tomvondracek\AiAlt\Tests\Service;
 
 use Bolt\Configuration\Config;
 use Bolt\Configuration\Content\ContentType;
@@ -10,12 +10,12 @@ use Bolt\Entity\Content;
 use Bolt\Entity\Field\ImageField;
 use Illuminate\Support\Collection;
 use PHPUnit\Framework\TestCase;
-use Tvondracek\AiAlt\AiAltConfig;
-use Tvondracek\AiAlt\AiAltConfigLoader;
-use Tvondracek\AiAlt\Service\FieldMetaProvider;
-use Tvondracek\AiAlt\Service\ImageFileLocator;
-use Tvondracek\AiAlt\Service\MissingAltFinder;
-use Tvondracek\AiAlt\Tests\Fixtures;
+use Tomvondracek\AiAlt\AiAltConfig;
+use Tomvondracek\AiAlt\AiAltConfigLoader;
+use Tomvondracek\AiAlt\Service\FieldMetaProvider;
+use Tomvondracek\AiAlt\Service\ImageFileLocator;
+use Tomvondracek\AiAlt\Service\MissingAltFinder;
+use Tomvondracek\AiAlt\Tests\Fixtures;
 
 final class MissingAltFinderTest extends TestCase
 {

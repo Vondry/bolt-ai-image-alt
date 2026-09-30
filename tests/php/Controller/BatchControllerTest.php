@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tvondracek\AiAlt\Tests\Controller;
+namespace Tomvondracek\AiAlt\Tests\Controller;
 
 use Bolt\Configuration\Config;
 use Bolt\Entity\Content;
@@ -22,14 +22,14 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
-use Tvondracek\AiAlt\AiAltConfig;
-use Tvondracek\AiAlt\AiAltConfigLoader;
-use Tvondracek\AiAlt\Controller\BatchController;
-use Tvondracek\AiAlt\Exception\AltAlreadyFilledException;
-use Tvondracek\AiAlt\Exception\ImageNotFoundException;
-use Tvondracek\AiAlt\Service\AltWriter;
-use Tvondracek\AiAlt\Service\MissingAltFinder;
-use Tvondracek\AiAlt\Tests\Fixtures;
+use Tomvondracek\AiAlt\AiAltConfig;
+use Tomvondracek\AiAlt\AiAltConfigLoader;
+use Tomvondracek\AiAlt\Controller\BatchController;
+use Tomvondracek\AiAlt\Exception\AltAlreadyFilledException;
+use Tomvondracek\AiAlt\Exception\ImageNotFoundException;
+use Tomvondracek\AiAlt\Service\AltWriter;
+use Tomvondracek\AiAlt\Service\MissingAltFinder;
+use Tomvondracek\AiAlt\Tests\Fixtures;
 use Twig\Environment;
 
 final class BatchControllerTest extends TestCase

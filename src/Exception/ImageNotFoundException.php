@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tvondracek\AiAlt\Exception;
+namespace Tomvondracek\AiAlt\Exception;
 
 use RuntimeException;
 

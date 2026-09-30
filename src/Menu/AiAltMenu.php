@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Tvondracek\AiAlt\Menu;
+namespace Tomvondracek\AiAlt\Menu;
 
 use Bolt\Menu\ExtensionBackendMenuInterface;
 use Knp\Menu\MenuItem;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Tvondracek\AiAlt\AiAltConfigLoader;
+use Tomvondracek\AiAlt\AiAltConfigLoader;
 
 /**
  * Adds "AI ALT" to the backend sidebar, linking to the batch page.

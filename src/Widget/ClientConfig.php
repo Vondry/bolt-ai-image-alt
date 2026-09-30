@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tvondracek\AiAlt\Widget;
+namespace Tomvondracek\AiAlt\Widget;
 
-use Tvondracek\AiAlt\AiAltConfig;
-use Tvondracek\AiAlt\Service\FieldMetaProvider;
-use Tvondracek\AiAlt\Service\LocaleResolver;
+use Tomvondracek\AiAlt\AiAltConfig;
+use Tomvondracek\AiAlt\Service\FieldMetaProvider;
+use Tomvondracek\AiAlt\Service\LocaleResolver;
 
 /**
  * Builds the JSON the browser code reads from `#ai-alt-config`.

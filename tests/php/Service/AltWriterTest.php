@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tvondracek\AiAlt\Tests\Service;
+namespace Tomvondracek\AiAlt\Tests\Service;
 
 use Bolt\Entity\Content;
 use Bolt\Entity\FieldTranslation;
@@ -12,11 +12,11 @@ use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-use Tvondracek\AiAlt\Exception\AltAlreadyFilledException;
-use Tvondracek\AiAlt\Exception\ImageNotFoundException;
-use Tvondracek\AiAlt\Service\AltWriter;
-use Tvondracek\AiAlt\Service\FieldMetaProvider;
-use Tvondracek\AiAlt\Tests\Fixtures;
+use Tomvondracek\AiAlt\Exception\AltAlreadyFilledException;
+use Tomvondracek\AiAlt\Exception\ImageNotFoundException;
+use Tomvondracek\AiAlt\Service\AltWriter;
+use Tomvondracek\AiAlt\Service\FieldMetaProvider;
+use Tomvondracek\AiAlt\Tests\Fixtures;
 
 final class AltWriterTest extends TestCase
 {

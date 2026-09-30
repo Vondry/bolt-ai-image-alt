@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tvondracek\AiAlt;
+namespace Tomvondracek\AiAlt;
 
 use Bolt\Extension\BaseExtension;
 use Throwable;
-use Tvondracek\AiAlt\Widget\AiAltWidget;
+use Tomvondracek\AiAlt\Widget\AiAltWidget;
 
 class Extension extends BaseExtension
 {

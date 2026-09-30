@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Tvondracek\AiAlt\Tests\Service;
+namespace Tomvondracek\AiAlt\Tests\Service;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use Tvondracek\AiAlt\Exception\AltAlreadyFilledException;
-use Tvondracek\AiAlt\Exception\ImageNotFoundException;
-use Tvondracek\AiAlt\Service\AltValue;
+use Tomvondracek\AiAlt\Exception\AltAlreadyFilledException;
+use Tomvondracek\AiAlt\Exception\ImageNotFoundException;
+use Tomvondracek\AiAlt\Service\AltValue;
 
 final class AltValueTest extends TestCase
 {

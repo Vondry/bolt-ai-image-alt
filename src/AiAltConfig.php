@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tvondracek\AiAlt;
+namespace Tomvondracek\AiAlt;
 
 /**
- * Typed, validated view of `config/extensions/tvondracek-aialt.yaml`.
+ * Typed, validated view of `config/extensions/tomvondracek-aialt.yaml`.
  */
 final readonly class AiAltConfig
 {

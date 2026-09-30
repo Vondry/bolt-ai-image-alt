@@ -1,3 +1,3 @@
 ai_alt:
-  resource: '../../vendor/tvondracek/bolt-ai-alt/src/Controller/'
+  resource: '../../vendor/tomvondracek/bolt-ai-alt/src/Controller/'
   type: attribute

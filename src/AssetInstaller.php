@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Tvondracek\AiAlt;
+namespace Tomvondracek\AiAlt;
 
 use FilesystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RuntimeException;
 use Symfony\Component\Filesystem\Filesystem;
-use Tvondracek\AiAlt\Widget\ClientConfig;
+use Tomvondracek\AiAlt\Widget\ClientConfig;
 
 /**
  * Copies the prebuilt browser assets (`public/` of this package) into the

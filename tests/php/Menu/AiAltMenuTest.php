@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Tvondracek\AiAlt\Tests\Menu;
+namespace Tomvondracek\AiAlt\Tests\Menu;
 
 use Knp\Menu\MenuFactory;
 use Knp\Menu\MenuItem;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Tvondracek\AiAlt\AiAltConfig;
-use Tvondracek\AiAlt\AiAltConfigLoader;
-use Tvondracek\AiAlt\Menu\AiAltMenu;
+use Tomvondracek\AiAlt\AiAltConfig;
+use Tomvondracek\AiAlt\AiAltConfigLoader;
+use Tomvondracek\AiAlt\Menu\AiAltMenu;
 
 final class AiAltMenuTest extends TestCase
 {

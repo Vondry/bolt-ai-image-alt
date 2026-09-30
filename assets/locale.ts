@@ -2,7 +2,7 @@ import type { FieldMeta } from './types';
 
 /**
  * Which language an alt has to be written in. Mirrors
- * `Tvondracek\AiAlt\Service\LocaleResolver` on the PHP side.
+ * `Tomvondracek\AiAlt\Service\LocaleResolver` on the PHP side.
  */
 
 /** `cs_CZ` / `cs-CZ` → `cs` (BCP 47 base language, as the Translator API wants it). */

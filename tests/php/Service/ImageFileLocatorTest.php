@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tvondracek\AiAlt\Tests\Service;
+namespace Tomvondracek\AiAlt\Tests\Service;
 
 use Bolt\Configuration\Config;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
-use Tvondracek\AiAlt\Service\ImageFileLocator;
+use Tomvondracek\AiAlt\Service\ImageFileLocator;
 
 final class ImageFileLocatorTest extends TestCase
 {

@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Tvondracek\AiAlt\Tests;
+namespace Tomvondracek\AiAlt\Tests;
 
 use Bolt\Configuration\Config;
 use Bolt\Widgets;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Filesystem\Filesystem;
-use Tvondracek\AiAlt\AssetInstaller;
-use Tvondracek\AiAlt\Extension;
-use Tvondracek\AiAlt\Widget\AiAltWidget;
+use Tomvondracek\AiAlt\AssetInstaller;
+use Tomvondracek\AiAlt\Extension;
+use Tomvondracek\AiAlt\Widget\AiAltWidget;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
@@ -90,7 +90,7 @@ final class ExtensionTest extends TestCase
             $extension->initialize();
 
             self::assertContains(dirname(__DIR__, 2) . '/templates', $loader->getPaths('ai-alt'));
-            self::assertFileExists($dir . '/extensions_config/tvondracek-aialt.yaml', 'default config copied to the project');
+            self::assertFileExists($dir . '/extensions_config/tomvondracek-aialt.yaml', 'default config copied to the project');
             self::assertSame(125, $extension->getAiAltConfig()->maxLength);
         } finally {
             (new Filesystem())->remove($dir);
@@ -101,7 +101,7 @@ final class ExtensionTest extends TestCase
     {
         $dir = sys_get_temp_dir() . '/ai-alt-ext-' . bin2hex(random_bytes(4));
         mkdir($dir . '/extensions_config', 0o777, true);
-        file_put_contents($dir . '/extensions_config/tvondracek-aialt.yaml', "enabled: false\n");
+        file_put_contents($dir . '/extensions_config/tomvondracek-aialt.yaml', "enabled: false\n");
 
         try {
             $widgets = $this->createMock(Widgets::class);

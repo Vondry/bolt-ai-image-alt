@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tvondracek\AiAlt\Service;
+namespace Tomvondracek\AiAlt\Service;
 
-use Tvondracek\AiAlt\Exception\AltAlreadyFilledException;
-use Tvondracek\AiAlt\Exception\ImageNotFoundException;
+use Tomvondracek\AiAlt\Exception\AltAlreadyFilledException;
+use Tomvondracek\AiAlt\Exception\ImageNotFoundException;
 
 /**
  * Pure helpers over the raw JSON value Bolt stores for `image` and `imagelist`

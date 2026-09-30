@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tvondracek\AiAlt\Tests;
+namespace Tomvondracek\AiAlt\Tests;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use Tvondracek\AiAlt\UiTranslations;
+use Tomvondracek\AiAlt\UiTranslations;
 
 final class UiTranslationsTest extends TestCase
 {

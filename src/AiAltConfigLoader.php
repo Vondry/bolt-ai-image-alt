@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tvondracek\AiAlt;
+namespace Tomvondracek\AiAlt;
 
 use Bolt\Configuration\Config;
 use Symfony\Component\Yaml\Yaml;
@@ -13,12 +13,12 @@ use Symfony\Component\Yaml\Yaml;
  * from the calling class's namespace).
  *
  * Same resolution as Bolt's `ConfigTrait`: the project's
- * `config/extensions/tvondracek-aialt.yaml`, overridden by `…_local.yaml`,
+ * `config/extensions/tomvondracek-aialt.yaml`, overridden by `…_local.yaml`,
  * falling back to the defaults shipped with the package.
  */
 class AiAltConfigLoader
 {
-    public const CONFIG_BASENAME = 'tvondracek-aialt';
+    public const CONFIG_BASENAME = 'tomvondracek-aialt';
 
     private ?AiAltConfig $config = null;
 

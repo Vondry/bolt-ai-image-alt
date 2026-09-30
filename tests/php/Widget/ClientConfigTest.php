@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tvondracek\AiAlt\Tests\Widget;
+namespace Tomvondracek\AiAlt\Tests\Widget;
 
 use PHPUnit\Framework\TestCase;
-use Tvondracek\AiAlt\AiAltConfig;
-use Tvondracek\AiAlt\Tests\Fixtures;
-use Tvondracek\AiAlt\Widget\ClientConfig;
+use Tomvondracek\AiAlt\AiAltConfig;
+use Tomvondracek\AiAlt\Tests\Fixtures;
+use Tomvondracek\AiAlt\Widget\ClientConfig;
 
 final class ClientConfigTest extends TestCase
 {

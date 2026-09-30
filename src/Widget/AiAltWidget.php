@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tvondracek\AiAlt\Widget;
+namespace Tomvondracek\AiAlt\Widget;
 
 use Bolt\Configuration\Config;
 use Bolt\Entity\Content;
@@ -15,7 +15,7 @@ use Bolt\Widget\TwigAwareInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Throwable;
-use Tvondracek\AiAlt\Extension;
+use Tomvondracek\AiAlt\Extension;
 
 /**
  * Injects the config JSON and the bootstrap script into the content edit page.

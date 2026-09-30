@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tvondracek\AiAlt\Tests\Widget;
+namespace Tomvondracek\AiAlt\Tests\Widget;
 
 use Bolt\Configuration\Config;
 use Bolt\Configuration\Content\ContentType;
@@ -15,10 +15,10 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Tvondracek\AiAlt\AiAltConfig;
-use Tvondracek\AiAlt\Extension;
-use Tvondracek\AiAlt\Tests\Fixtures;
-use Tvondracek\AiAlt\Widget\AiAltWidget;
+use Tomvondracek\AiAlt\AiAltConfig;
+use Tomvondracek\AiAlt\Extension;
+use Tomvondracek\AiAlt\Tests\Fixtures;
+use Tomvondracek\AiAlt\Widget\AiAltWidget;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tvondracek\AiAlt\Tests\Service;
+namespace Tomvondracek\AiAlt\Tests\Service;
 
 use Illuminate\Support\Collection;
 use PHPUnit\Framework\TestCase;
-use Tvondracek\AiAlt\Service\FieldMetaProvider;
-use Tvondracek\AiAlt\Tests\Fixtures;
+use Tomvondracek\AiAlt\Service\FieldMetaProvider;
+use Tomvondracek\AiAlt\Tests\Fixtures;
 
 final class FieldMetaProviderTest extends TestCase
 {

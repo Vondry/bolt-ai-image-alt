@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tvondracek\AiAlt\Controller;
+namespace Tomvondracek\AiAlt\Controller;
 
 use Bolt\Controller\CsrfTrait;
 use Bolt\Entity\Content;
@@ -17,15 +17,15 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
-use Tvondracek\AiAlt\AiAltConfigLoader;
-use Tvondracek\AiAlt\Exception\AltAlreadyFilledException;
-use Tvondracek\AiAlt\Exception\ImageNotFoundException;
-use Tvondracek\AiAlt\Extension;
-use Tvondracek\AiAlt\Service\AltWriter;
-use Tvondracek\AiAlt\Service\ContentSource;
-use Tvondracek\AiAlt\Service\MissingAltFinder;
-use Tvondracek\AiAlt\UiTranslations;
-use Tvondracek\AiAlt\Widget\ClientConfig;
+use Tomvondracek\AiAlt\AiAltConfigLoader;
+use Tomvondracek\AiAlt\Exception\AltAlreadyFilledException;
+use Tomvondracek\AiAlt\Exception\ImageNotFoundException;
+use Tomvondracek\AiAlt\Extension;
+use Tomvondracek\AiAlt\Service\AltWriter;
+use Tomvondracek\AiAlt\Service\ContentSource;
+use Tomvondracek\AiAlt\Service\MissingAltFinder;
+use Tomvondracek\AiAlt\UiTranslations;
+use Tomvondracek\AiAlt\Widget\ClientConfig;
 
 /**
  * Batch page: fills missing alt texts on existing content. Captioning runs in

@@ -5,7 +5,7 @@ import en from './langs/en.json';
  * `langs/` folders of the bolt/redactor and bolt/article extensions. `en.json`
  * is the canonical set; a key missing elsewhere falls back to English. Adding
  * a language = adding a file. The PHP side reads the same files (batch page
- * title, see `Tvondracek\AiAlt\UiTranslations`).
+ * title, see `Tomvondracek\AiAlt\UiTranslations`).
  */
 export type MessageKey = keyof typeof en;
 

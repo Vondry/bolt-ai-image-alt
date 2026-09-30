@@ -30,7 +30,7 @@ Hugging Face (a few hundred MB) and cached by the browser.
 ## Installation
 
 ```bash
-composer require tvondracek/bolt-ai-alt
+composer require tomvondracek/bolt-ai-alt
 bin/console extensions:configure
 ```
 
@@ -39,7 +39,7 @@ the server. Run it again after every update of the extension.
 
 ## Configuration
 
-`config/extensions/tvondracek-aialt.yaml` (created on first use; see [config/config.yaml](config/config.yaml) for
+`config/extensions/tomvondracek-aialt.yaml` (created on first use; see [config/config.yaml](config/config.yaml) for
 all options):
 
 ```yaml
@@ -134,7 +134,7 @@ To try it in a Bolt project from a local checkout:
 
 ```bash
 composer config repositories.ai-alt '{"type":"path","url":"../bolt-ai-image-alt"}'
-composer require tvondracek/bolt-ai-alt:@dev
+composer require tomvondracek/bolt-ai-alt:@dev
 bin/console extensions:configure
 ```
 

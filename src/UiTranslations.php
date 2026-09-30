@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tvondracek\AiAlt;
+namespace Tomvondracek\AiAlt;
 
 /**
  * Server-side access to the UI strings in `assets/langs/<language>.json`, the

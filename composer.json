@@ -1,5 +1,5 @@
 {
-    "name": "tvondracek/bolt-ai-alt",
+    "name": "tomvondracek/bolt-ai-alt",
     "description": "In-browser AI generation of image ALT texts for the Bolt CMS admin (Florence-2 + Chrome Translator API). No API costs, image data never leaves the browser.",
     "type": "bolt-extension",
     "license": "MIT",
@@ -26,12 +26,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Tvondracek\\AiAlt\\": "src/"
+            "Tomvondracek\\AiAlt\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Tvondracek\\AiAlt\\Tests\\": "tests/php/"
+            "Tomvondracek\\AiAlt\\Tests\\": "tests/php/"
         }
     },
     "scripts": {
@@ -44,7 +44,7 @@
         "branch-alias": {
             "dev-main": "1.0.x-dev"
         },
-        "entrypoint": "Tvondracek\\AiAlt\\Extension"
+        "entrypoint": "Tomvondracek\\AiAlt\\Extension"
     },
     "config": {
         "allow-plugins": {
