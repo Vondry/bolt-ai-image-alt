@@ -12,7 +12,8 @@
     ],
     "require": {
         "php": ">=8.2",
-        "twig/twig": "^3.30"
+        "twig/twig": "^3.30",
+        "symfony/polyfill-php84": "^1.38.1"
     },
     "require-dev": {
         "bolt/core": "^6.1.8",

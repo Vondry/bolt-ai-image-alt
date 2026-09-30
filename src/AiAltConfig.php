@@ -80,7 +80,7 @@ final readonly class AiAltConfig
             prewarmModel: self::bool($config, 'prewarm_model'),
             model: self::string($config, 'model', self::DEFAULTS['model']),
             task: $task,
-            modelHost: rtrim(self::string($config, 'model_host', self::DEFAULTS['model_host']), '/'),
+            modelHost: mb_rtrim(self::string($config, 'model_host', self::DEFAULTS['model_host']), '/'),
             thumbnail: self::string($config, 'thumbnail', self::DEFAULTS['thumbnail']),
             maxLength: $maxLength,
             fallbackWithoutTranslator: $fallback,
@@ -138,7 +138,7 @@ final readonly class AiAltConfig
     {
         $value = $config[$key] ?? null;
 
-        return is_string($value) && trim($value) !== '' ? trim($value) : $default;
+        return is_string($value) && mb_trim($value) !== '' ? mb_trim($value) : $default;
     }
 
     /**

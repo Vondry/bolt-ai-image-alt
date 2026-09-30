@@ -42,7 +42,7 @@ final class LocaleResolver
      */
     public static function baseLanguage(string $locale): string
     {
-        $base = preg_split('/[_-]/', trim($locale))[0] ?? '';
+        $base = preg_split('/[_-]/', mb_trim($locale))[0] ?? '';
 
         return mb_strtolower($base);
     }

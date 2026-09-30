@@ -33,7 +33,7 @@ final class UiTranslations
      */
     public static function language(?string $locale): string
     {
-        $language = mb_strtolower(explode('_', str_replace('-', '_', trim((string) $locale)))[0]);
+        $language = mb_strtolower(explode('_', str_replace('-', '_', mb_trim((string) $locale)))[0]);
 
         return preg_match('/^[a-z]{2,3}$/', $language) === 1 ? $language : 'en';
     }

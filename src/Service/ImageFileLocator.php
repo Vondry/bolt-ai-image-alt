@@ -18,7 +18,7 @@ class ImageFileLocator
 
     public function exists(string $filename): bool
     {
-        $filename = ltrim($filename, '/');
+        $filename = mb_ltrim($filename, '/');
 
         if ($filename === '' || str_contains($filename, "\0")) {
             return false;

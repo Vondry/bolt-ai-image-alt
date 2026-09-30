@@ -234,7 +234,7 @@ class MissingAltFinder
             $title = '';
         }
 
-        $title = is_scalar($title) ? trim(strip_tags((string) $title)) : '';
+        $title = is_scalar($title) ? mb_trim(strip_tags((string) $title)) : '';
 
         return $title !== '' ? $title : '#' . $content->getId();
     }

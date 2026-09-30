@@ -83,7 +83,7 @@ final class ClientConfig
      */
     public static function paths(string $basePath): array
     {
-        $basePath = rtrim($basePath, '/');
+        $basePath = mb_rtrim($basePath, '/');
 
         return [
             // Also used to resolve a path-style `model_host` (`/ai-alt-models`).

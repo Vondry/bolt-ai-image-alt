@@ -38,7 +38,7 @@ final readonly class AssetInstaller
             throw new RuntimeException(sprintf('AI ALT assets not found in "%s". Run `npm run build` in the extension.', $source));
         }
 
-        $target = rtrim($webRoot, '/\\') . ClientConfig::ASSET_BASE;
+        $target = mb_rtrim($webRoot, '/\\') . ClientConfig::ASSET_BASE;
 
         // `delete` removes stale files from previous versions (old ORT builds).
         $this->filesystem->mirror($source, $target, null, [

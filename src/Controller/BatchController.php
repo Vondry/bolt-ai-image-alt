@@ -189,7 +189,7 @@ class BatchController extends ExtensionController
     {
         $withoutTags = preg_replace('#</?[a-z][^<>]*>|<!--.*?-->#isu', ' ', $alt) ?? '';
 
-        return trim(preg_replace('/[\s\p{Cc}]+/u', ' ', $withoutTags) ?? '');
+        return mb_trim(preg_replace('/[\s\p{Cc}]+/u', ' ', $withoutTags) ?? '');
     }
 
     private function canEdit(Content $content): bool

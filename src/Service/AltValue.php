@@ -148,7 +148,7 @@ final class AltValue
     {
         $filename = $image['filename'] ?? '';
 
-        return is_string($filename) ? trim($filename) : '';
+        return is_string($filename) ? mb_trim($filename) : '';
     }
 
     /**
@@ -158,6 +158,6 @@ final class AltValue
     {
         $alt = $image['alt'] ?? '';
 
-        return ! is_string($alt) || trim($alt) === '';
+        return ! is_string($alt) || mb_trim($alt) === '';
     }
 }
