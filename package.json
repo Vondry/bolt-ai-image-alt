@@ -1,7 +1,7 @@
 {
     "name": "bolt-ai-alt",
     "private": true,
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Browser side of the AI ALT Bolt extension",
     "type": "module",
     "license": "MIT",
