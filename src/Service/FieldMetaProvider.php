@@ -21,7 +21,7 @@ final class FieldMetaProvider
     public const TYPE_IMAGELIST = 'imagelist';
 
     /**
-     * @param iterable<array-key, mixed> $fields the `fields` of a ContentType definition
+     * @param iterable<mixed> $fields the `fields` of a ContentType definition
      *
      * @return array<string, array{type: string, localized: bool}>
      */
@@ -30,7 +30,7 @@ final class FieldMetaProvider
         $meta = [];
 
         foreach ($fields as $name => $definition) {
-            if (! is_iterable($definition)) {
+            if ((! is_string($name) && ! is_int($name)) || ! is_iterable($definition)) {
                 continue;
             }
 
@@ -53,7 +53,7 @@ final class FieldMetaProvider
      * Top-level `image` / `imagelist` fields that have an alt input. These are
      * the fields the batch page can fill.
      *
-     * @param iterable<array-key, mixed> $fields
+     * @param iterable<mixed> $fields
      *
      * @return array<string, array{type: string, localized: bool}>
      */
@@ -111,7 +111,7 @@ final class FieldMetaProvider
     }
 
     /**
-     * @param iterable<array-key, mixed> $value
+     * @param iterable<mixed> $value
      *
      * @return array<array-key, mixed>
      */

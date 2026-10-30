@@ -106,8 +106,8 @@ final class AltWriterTest extends TestCase
 
         $translations = $content->getField('gallery')
             ->getTranslations();
-        self::assertSame('Pes', $translations->get('cs')?->getValue()[0]['alt']);
-        self::assertSame('Filled', $translations->get('en')?->getValue()[0]['alt']);
+        self::assertSame('Pes', self::altAt($translations->get('cs')?->getValue(), 0));
+        self::assertSame('Filled', self::altAt($translations->get('en')?->getValue(), 0));
     }
 
     public function testRefusesAlreadyFilledAlt(): void
@@ -185,9 +185,8 @@ final class AltWriterTest extends TestCase
         $value = $content->getField('gallery')
             ->getTranslations()
             ->get('cs')?->getValue();
-        self::assertIsArray($value);
-        self::assertSame('Pes', $value[0]['alt']);
-        self::assertSame('Kočka', $value[1]['alt'], 'the concurrent save is not overwritten');
+        self::assertSame('Pes', self::altAt($value, 0));
+        self::assertSame('Kočka', self::altAt($value, 1), 'the concurrent save is not overwritten');
     }
 
     public function testRollsBackWhenTheLockedReadShowsTheAltWasFilledMeanwhile(): void
@@ -204,5 +203,17 @@ final class AltWriterTest extends TestCase
 
         self::assertSame(['begin', 'refresh:write-lock', 'rollback'], $this->calls);
         self::assertSame([], $this->events, 'no save events for a write that did not happen');
+    }
+
+    /**
+     * The alt text of the item at $index of an imagelist value.
+     */
+    private static function altAt(mixed $value, int $index): mixed
+    {
+        self::assertIsArray($value);
+        $item = $value[$index] ?? null;
+        self::assertIsArray($item);
+
+        return $item['alt'] ?? null;
     }
 }

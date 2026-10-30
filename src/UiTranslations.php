@@ -50,6 +50,8 @@ final class UiTranslations
         $json = @file_get_contents(self::directory() . '/' . $language . '.json');
         $data = $json === false ? null : json_decode($json, true);
 
-        return self::$catalogues[$language] = is_array($data) ? array_filter($data, is_string(...)) : [];
+        return self::$catalogues[$language] = is_array($data)
+            ? array_filter(array_filter($data, is_string(...)), is_string(...), ARRAY_FILTER_USE_KEY)
+            : [];
     }
 }

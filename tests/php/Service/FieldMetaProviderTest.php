@@ -120,10 +120,10 @@ final class FieldMetaProviderTest extends TestCase
 
     public function testBatchableFieldsAreTopLevelImages(): void
     {
-        self::assertSame(
-            ['image', 'gallery'],
-            array_keys((new FieldMetaProvider())->batchableFields(Fixtures::contentType()->get('fields')))
-        );
+        $fields = Fixtures::contentType()->get('fields');
+        self::assertIsIterable($fields);
+
+        self::assertSame(['image', 'gallery'], array_keys((new FieldMetaProvider())->batchableFields($fields)));
     }
 
     public function testIncludesAlt(): void

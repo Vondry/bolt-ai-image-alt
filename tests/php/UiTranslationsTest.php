@@ -58,7 +58,7 @@ final class UiTranslationsTest extends TestCase
     }
 
     /**
-     * @return array<string, string>
+     * @return array<mixed>
      */
     private static function read(string $language): array
     {

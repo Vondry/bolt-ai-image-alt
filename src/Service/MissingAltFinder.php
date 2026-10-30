@@ -66,6 +66,10 @@ class MissingAltFinder
         }
 
         foreach ($contentTypes as $slug => $contentType) {
+            if (! is_string($slug) && ! is_int($slug)) {
+                continue;
+            }
+
             $slug = (string) $slug;
 
             if (! is_iterable($contentType) || ! $config->isContentTypeAllowed($slug)) {
@@ -240,12 +244,12 @@ class MissingAltFinder
     }
 
     /**
-     * @param iterable<array-key, mixed> $fieldDefinitions
+     * @param iterable<mixed> $fieldDefinitions
      */
     private static function fieldLabel(iterable $fieldDefinitions, string $name): string
     {
         foreach ($fieldDefinitions as $key => $definition) {
-            if ((string) $key === $name && is_iterable($definition)) {
+            if ((is_string($key) || is_int($key)) && (string) $key === $name && is_iterable($definition)) {
                 $definition = is_array($definition) ? $definition : iterator_to_array($definition);
 
                 return is_string($definition['label'] ?? null) ? $definition['label'] : $name;
