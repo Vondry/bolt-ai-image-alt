@@ -14,6 +14,7 @@ use Bolt\Widget\RequestAwareInterface;
 use Bolt\Widget\TwigAwareInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Throwable;
 use Tomvondracek\AiAlt\Extension;
 
@@ -88,7 +89,8 @@ class AiAltWidget extends BaseWidget implements TwigAwareInterface, RequestAware
     private function uiLocale(Extension $extension): string
     {
         try {
-            $user = $extension->getService('security.token_storage')?->getToken()?->getUser();
+            $tokenStorage = $extension->getService('security.token_storage');
+            $user = $tokenStorage instanceof TokenStorageInterface ? $tokenStorage->getToken()?->getUser() : null;
         } catch (Throwable) {
             $user = null;
         }

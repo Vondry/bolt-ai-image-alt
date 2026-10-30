@@ -42,7 +42,7 @@ final class BatchControllerTest extends TestCase
         ContentVoter::CONTENT_EDIT => true,
     ];
 
-    /** @var array<string, mixed>|null */
+    /** @var array<mixed>|null */
     private ?array $renderedContext = null;
 
     private ?string $renderedTemplate = null;
@@ -54,7 +54,7 @@ final class BatchControllerTest extends TestCase
     {
         $authorization = $this->createStub(AuthorizationCheckerInterface::class);
         $authorization->method('isGranted')
-            ->willReturnCallback(fn (mixed $attribute, mixed $subject = null): bool => ($this->granted[(string) $attribute] ?? false)
+            ->willReturnCallback(fn (mixed $attribute, mixed $subject = null): bool => (is_string($attribute) && ($this->granted[$attribute] ?? false))
                 && ($this->editableIds === null || ! $subject instanceof Content || in_array($subject->getId(), $this->editableIds, true)));
 
         $router = $this->createStub(UrlGeneratorInterface::class);
@@ -123,7 +123,7 @@ final class BatchControllerTest extends TestCase
         // Like the real finder: keep only items whose record passes $canEdit.
         $filter = static fn (?callable $canEdit): array => array_values(array_filter(
             $items,
-            static fn (array $item): bool => $canEdit === null || $canEdit(Fixtures::content((int) ($item['contentId'] ?? 0)))
+            static fn (array $item): bool => $canEdit === null || $canEdit(Fixtures::content(is_int($item['contentId'] ?? null) ? $item['contentId'] : 0))
         ));
         $finder->method('find')
             ->willReturnCallback(static fn (?string $contentType = null, ?callable $canEdit = null): array => $filter($canEdit));
@@ -158,7 +158,7 @@ final class BatchControllerTest extends TestCase
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array<mixed>
      */
     private static function decode(Response $response): array
     {
@@ -167,6 +167,30 @@ final class BatchControllerTest extends TestCase
         self::assertIsArray($data);
 
         return $data;
+    }
+
+    /**
+     * @param array<mixed> $data
+     *
+     * @return array<mixed>
+     */
+    private static function items(array $data): array
+    {
+        $items = $data['items'] ?? null;
+        self::assertIsArray($items);
+
+        return $items;
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    private function renderedAiAlt(): array
+    {
+        $aiAlt = $this->renderedContext['aiAlt'] ?? null;
+        self::assertIsArray($aiAlt);
+
+        return $aiAlt;
     }
 
     private function writer(?\Throwable $throw = null, int $expectedCalls = 1): AltWriter
@@ -219,12 +243,12 @@ final class BatchControllerTest extends TestCase
 
         $this->controller()
             ->batch(Request::create('/'), $this->loader(), $this->finder());
-        self::assertSame('/extensions/ai-alt', $this->renderedContext['aiAlt']['assetBase'] ?? null);
+        self::assertSame('/extensions/ai-alt', $this->renderedAiAlt()['assetBase'] ?? null);
 
         $this->controller()
             ->batch($request, $this->loader(), $this->finder());
-        self::assertSame('/cms/extensions/ai-alt', $this->renderedContext['aiAlt']['assetBase'] ?? null);
-        self::assertSame('/cms/thumbs', $this->renderedContext['aiAlt']['thumbsBase'] ?? null);
+        self::assertSame('/cms/extensions/ai-alt', $this->renderedAiAlt()['assetBase'] ?? null);
+        self::assertSame('/cms/thumbs', $this->renderedAiAlt()['thumbsBase'] ?? null);
     }
 
     /**
@@ -255,7 +279,7 @@ final class BatchControllerTest extends TestCase
         $this->controller()
             ->batch(new Request(), $this->loader(), $this->finder());
 
-        self::assertSame('en', $this->renderedContext['aiAlt']['uiLocale'] ?? null);
+        self::assertSame('en', $this->renderedAiAlt()['uiLocale'] ?? null);
         self::assertSame('Fill in missing ALT texts', $this->renderedContext['title'] ?? null);
     }
 
@@ -280,8 +304,10 @@ final class BatchControllerTest extends TestCase
         self::assertSame(5, $data['total']);
         self::assertSame(1, $data['offset']);
         self::assertSame(2, $data['limit']);
-        self::assertSame([2, 3], array_column($data['items'], 'contentId'));
-        self::assertSame('/bolt_content_edit?id=2&edit_locale=cs', $data['items'][0]['editUrl']);
+        $items = self::items($data);
+        self::assertSame([2, 3], array_column($items, 'contentId'));
+        self::assertIsArray($items[0]);
+        self::assertSame('/bolt_content_edit?id=2&edit_locale=cs', $items[0]['editUrl']);
     }
 
     public function testMissingOnlyIncludesEditableRecords(): void
@@ -294,7 +320,7 @@ final class BatchControllerTest extends TestCase
 
         $data = self::decode($this->controller()->missing(new Request(), $this->loader(), $this->finder($items)));
         self::assertSame(1, $data['total']);
-        self::assertSame([2], array_column($data['items'], 'contentId'));
+        self::assertSame([2], array_column(self::items($data), 'contentId'));
     }
 
     public function testBatchPageDoesNotScanContent(): void
@@ -345,7 +371,7 @@ final class BatchControllerTest extends TestCase
 
         $data = self::decode($this->controller()->missing(new Request(), $this->loader(), $this->finder($items)));
 
-        self::assertCount(600, $data['items']);
+        self::assertCount(600, self::items($data));
     }
 
     public function testMissingClampsPaging(): void

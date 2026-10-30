@@ -16,7 +16,7 @@ final class LocaleResolver
      * The language of non-localized fields: the ContentType's first locale if
      * it defines `locales`, otherwise the site default (`%locale%`).
      *
-     * @param iterable<array-key, mixed>|null $contentTypeLocales
+     * @param iterable<mixed>|null $contentTypeLocales
      */
     public static function defaultLocale(?iterable $contentTypeLocales, string $siteDefaultLocale): string
     {
