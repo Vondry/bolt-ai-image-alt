@@ -27,7 +27,7 @@ final class ImageFileLocatorTest extends TestCase
 
     public function testExists(): void
     {
-        $boltConfig = $this->createStub(Config::class);
+        $boltConfig = self::createStub(Config::class);
         $boltConfig->method('getPath')
             ->willReturn($this->dir);
         $locator = new ImageFileLocator($boltConfig);

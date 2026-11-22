@@ -25,7 +25,8 @@ class ImageFileLocator
         }
 
         // Stored field values are editor input: never look outside the files folder.
-        if (in_array('..', preg_split('#[/\\\\]#', $filename) ?: [], true)) {
+        $segments = preg_split('#[/\\\\]#', $filename);
+        if ($segments !== false && in_array('..', $segments, true)) {
             return false;
         }
 

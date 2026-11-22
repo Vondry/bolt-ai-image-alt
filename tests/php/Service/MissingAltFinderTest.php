@@ -29,23 +29,35 @@ final class MissingAltFinderTest extends TestCase
      */
     private function finder(array $contents, array $config = [], ?array $contentTypes = null, mixed $rawContentTypes = null): MissingAltFinder
     {
-        $boltConfig = $this->createStub(Config::class);
+        $boltConfig = self::createStub(Config::class);
         $boltConfig->method('get')
             ->willReturnCallback(
                 static fn (string $path): mixed => $path === 'contenttypes'
                     ? ($rawContentTypes ?? new Collection($contentTypes ?? [
                         'pages' => Fixtures::contentType(),
-                        'entries' => Fixtures::contentType(['name' => 'Entries', 'slug' => 'entries', 'locales' => []]),
-                        'blocks' => Fixtures::contentType(['name' => 'Blocks', 'slug' => 'blocks', 'fields' => ['title' => ['type' => 'text']]]),
+                        'entries' => Fixtures::contentType([
+                            'name' => 'Entries',
+                            'slug' => 'entries',
+                            'locales' => [],
+                        ]),
+                        'blocks' => Fixtures::contentType([
+                            'name' => 'Blocks',
+                            'slug' => 'blocks',
+                            'fields' => [
+                                'title' => [
+                                    'type' => 'text',
+                                ],
+                            ],
+                        ]),
                     ]))
                     : null
             );
 
-        $loader = $this->createStub(AiAltConfigLoader::class);
+        $loader = self::createStub(AiAltConfigLoader::class);
         $loader->method('load')
             ->willReturn(AiAltConfig::fromArray($config));
 
-        $fileLocator = $this->createStub(ImageFileLocator::class);
+        $fileLocator = self::createStub(ImageFileLocator::class);
         $fileLocator->method('exists')
             ->willReturnCallback(fn (string $filename): bool => ! in_array($filename, $this->missingFiles, true));
 
@@ -55,7 +67,12 @@ final class MissingAltFinderTest extends TestCase
     private function page(int $id): Content
     {
         $content = Fixtures::content($id);
-        Fixtures::addImage($content, 'image', ['cs' => ['filename' => "page{$id}.jpg", 'alt' => '']], 'cs');
+        Fixtures::addImage($content, 'image', [
+            'cs' => [
+                'filename' => "page{$id}.jpg",
+                'alt' => '',
+            ],
+        ], 'cs');
         Fixtures::addImagelist($content, 'gallery', [
             'cs' => [['filename' => 'g1.jpg', 'alt' => 'Pes'], ['filename' => 'g2.jpg', 'alt' => '']],
             'en' => [['filename' => 'g1.jpg', 'alt' => ''], ['filename' => 'g2.jpg', 'alt' => 'Cat']],

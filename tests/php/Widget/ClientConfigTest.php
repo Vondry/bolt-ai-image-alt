@@ -22,8 +22,14 @@ final class ClientConfigTest extends TestCase
         self::assertSame('123', $config['assetVersion']);
         self::assertSame('/extensions/ai-alt', $config['assetBase']);
         self::assertSame([
-            'image' => ['type' => 'image', 'localized' => false],
-            'gallery' => ['type' => 'imagelist', 'localized' => true],
+            'image' => [
+                'type' => 'image',
+                'localized' => false,
+            ],
+            'gallery' => [
+                'type' => 'imagelist',
+                'localized' => true,
+            ],
         ], $config['fieldMeta']);
         self::assertTrue($config['autoOnUpload']);
     }
@@ -35,12 +41,18 @@ final class ClientConfigTest extends TestCase
         self::assertSame('/cms/extensions/ai-alt', $config['assetBase'] ?? null);
         self::assertSame('/cms/thumbs', $config['thumbsBase'] ?? null);
         self::assertSame('/cms', $config['basePath'] ?? null);
-        self::assertSame(['basePath' => '', 'assetBase' => '/extensions/ai-alt', 'thumbsBase' => '/thumbs'], ClientConfig::paths(''));
+        self::assertSame([
+            'basePath' => '',
+            'assetBase' => '/extensions/ai-alt',
+            'thumbsBase' => '/thumbs',
+        ], ClientConfig::paths(''));
     }
 
     public function testEditorConfigWithoutContentTypeLocalesUsesSiteLocale(): void
     {
-        $config = ClientConfig::forEditor(AiAltConfig::fromArray([]), Fixtures::contentType(['locales' => []]), 'de', 'en');
+        $config = ClientConfig::forEditor(AiAltConfig::fromArray([]), Fixtures::contentType([
+            'locales' => [],
+        ]), 'de', 'en');
 
         self::assertSame('de', $config['defaultLocale'] ?? null);
     }

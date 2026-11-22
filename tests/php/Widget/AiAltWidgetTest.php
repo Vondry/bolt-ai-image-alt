@@ -26,7 +26,7 @@ final class AiAltWidgetTest extends TestCase
 {
     private function boltConfig(): Config
     {
-        $boltConfig = $this->createStub(Config::class);
+        $boltConfig = self::createStub(Config::class);
         $boltConfig->method('getContentType')
             ->willReturnCallback(
                 static fn (string $slug): mixed => $slug === 'pages' ? Fixtures::contentType() : null
@@ -37,11 +37,11 @@ final class AiAltWidgetTest extends TestCase
 
     private function entityManager(?Content $content): EntityManagerInterface
     {
-        $repository = $this->createStub(EntityRepository::class);
+        $repository = self::createStub(EntityRepository::class);
         $repository->method('find')
             ->willReturn($content);
 
-        $entityManager = $this->createStub(EntityManagerInterface::class);
+        $entityManager = self::createStub(EntityManagerInterface::class);
         $entityManager->method('getRepository')
             ->willReturn($repository);
 
@@ -103,7 +103,7 @@ final class AiAltWidgetTest extends TestCase
             $tokenStorage->setToken(new UsernamePasswordToken($user, 'main', $user->getRoles()));
         }
 
-        $extension = $this->createStub(Extension::class);
+        $extension = self::createStub(Extension::class);
         $extension->method('getAiAltConfig')
             ->willReturn(AiAltConfig::fromArray($config));
         $extension->method('getBoltConfig')
@@ -151,7 +151,7 @@ final class AiAltWidgetTest extends TestCase
     public function testRendersNothingWithoutOurExtension(): void
     {
         $widget = new AiAltWidget();
-        $widget->injectExtension($this->createStub(BaseExtension::class));
+        $widget->injectExtension(self::createStub(BaseExtension::class));
 
         self::assertNull($widget());
     }

@@ -98,7 +98,7 @@ final class AiAltConfigTest extends TestCase
     #[DataProvider('invalidValues')]
     public function testInvalidValuesFallBackToDefaults(array $raw, string $property, mixed $expected): void
     {
-        self::assertSame($expected, AiAltConfig::fromArray($raw)->{$property});
+        self::assertSame($expected, get_object_vars(AiAltConfig::fromArray($raw))[$property]);
     }
 
     /**

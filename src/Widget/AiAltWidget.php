@@ -38,7 +38,7 @@ class AiAltWidget extends BaseWidget implements TwigAwareInterface, RequestAware
     protected $zone = RequestZone::BACKEND;
 
     /**
-     * @param array<string, mixed> $params
+     * @param array<mixed> $params
      */
     protected function run(array $params = []): ?string
     {
@@ -95,6 +95,8 @@ class AiAltWidget extends BaseWidget implements TwigAwareInterface, RequestAware
             $user = null;
         }
 
-        return $user instanceof User ? ($user->getLocale() ?: 'en') : 'en';
+        $locale = $user instanceof User ? $user->getLocale() : null;
+
+        return $locale !== null && $locale !== '' ? $locale : 'en';
     }
 }

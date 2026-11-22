@@ -48,7 +48,8 @@ final class UiTranslationsTest extends TestCase
     public function testEveryCatalogueHasAllEnglishKeys(): void
     {
         $english = self::read('en');
-        $files = glob(UiTranslations::directory() . '/*.json') ?: [];
+        $files = glob(UiTranslations::directory() . '/*.json');
+        self::assertNotFalse($files);
         self::assertGreaterThanOrEqual(11, count($files));
 
         foreach ($files as $file) {

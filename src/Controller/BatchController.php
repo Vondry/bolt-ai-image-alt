@@ -85,7 +85,8 @@ class BatchController extends ExtensionController
     {
         $this->denyAccessUnlessGranted($configLoader->load()->batchPagePermission);
 
-        $contentType = $request->query->getString('contenttype') ?: null;
+        $contentType = $request->query->getString('contenttype');
+        $contentType = $contentType !== '' ? $contentType : null;
         $offset = max(0, $request->query->getInt('offset'));
         $limit = min(self::MAX_LIMIT, max(1, $request->query->getInt('limit', self::MAX_LIMIT)));
 
@@ -201,7 +202,9 @@ class BatchController extends ExtensionController
     {
         $user = $this->getUser();
 
-        return $user instanceof User ? ($user->getLocale() ?: 'en') : 'en';
+        $locale = $user instanceof User ? $user->getLocale() : null;
+
+        return $locale !== null && $locale !== '' ? $locale : 'en';
     }
 
     private function error(string $message, int $status): JsonResponse

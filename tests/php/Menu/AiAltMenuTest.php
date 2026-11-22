@@ -20,7 +20,7 @@ final class AiAltMenuTest extends TestCase
      */
     private function menu(array $config, bool $granted): MenuItem
     {
-        $urlGenerator = $this->createStub(UrlGeneratorInterface::class);
+        $urlGenerator = self::createStub(UrlGeneratorInterface::class);
         $urlGenerator->method('generate')
             ->willReturn('/bolt/ai-alt/batch');
 
@@ -29,7 +29,7 @@ final class AiAltMenuTest extends TestCase
             ->with('ROLE_EDITOR')
             ->willReturn($granted);
 
-        $loader = $this->createStub(AiAltConfigLoader::class);
+        $loader = self::createStub(AiAltConfigLoader::class);
         $loader->method('load')
             ->willReturn(AiAltConfig::fromArray($config));
 
