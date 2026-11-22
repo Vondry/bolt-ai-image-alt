@@ -57,13 +57,13 @@ final class ExtensionTest extends TestCase
 
     private function extensionWithServices(string $dir, ?Widgets $widgets = null, ?Environment $twig = null): Extension
     {
-        $boltConfig = $this->createStub(Config::class);
+        $boltConfig = self::createStub(Config::class);
         $boltConfig->method('getPath')
             ->willReturnCallback(static fn (string $name): string => $dir . '/' . $name);
 
         $container = new Container();
         $container->set(Config::class, $boltConfig);
-        $container->set(Widgets::class, $widgets ?? $this->createStub(Widgets::class));
+        $container->set(Widgets::class, $widgets ?? self::createStub(Widgets::class));
         $container->set('twig', $twig ?? new Environment(new FilesystemLoader()));
 
         $extension = new Extension();

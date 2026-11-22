@@ -4,11 +4,15 @@
          bootstrap="vendor/autoload.php"
          colors="true"
          cacheDirectory="var/cache/phpunit"
+         executionOrder="random"
          failOnWarning="true"
          failOnRisky="true"
+         failOnNotice="true"
+         failOnDeprecation="true"
+         failOnPhpunitDeprecation="true"
          beStrictAboutOutputDuringTests="true">
     <testsuites>
-        <testsuite name="AI ALT">
+        <testsuite name="bolt-ai-image-alt">
             <directory>tests/php</directory>
         </testsuite>
     </testsuites>

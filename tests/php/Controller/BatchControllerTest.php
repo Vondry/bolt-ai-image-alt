@@ -10,6 +10,7 @@ use Bolt\Entity\User;
 use Bolt\Security\ContentVoter;
 use Doctrine\DBAL\Driver\AbstractException;
 use Doctrine\DBAL\Exception\LockWaitTimeoutException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -22,6 +23,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Throwable;
 use Tomvondracek\AiAlt\AiAltConfig;
 use Tomvondracek\AiAlt\AiAltConfigLoader;
 use Tomvondracek\AiAlt\Controller\BatchController;
@@ -52,18 +54,18 @@ final class BatchControllerTest extends TestCase
 
     private function controller(?User $user = null): BatchController
     {
-        $authorization = $this->createStub(AuthorizationCheckerInterface::class);
+        $authorization = self::createStub(AuthorizationCheckerInterface::class);
         $authorization->method('isGranted')
             ->willReturnCallback(fn (mixed $attribute, mixed $subject = null): bool => (is_string($attribute) && ($this->granted[$attribute] ?? false))
                 && ($this->editableIds === null || ! $subject instanceof Content || in_array($subject->getId(), $this->editableIds, true)));
 
-        $router = $this->createStub(UrlGeneratorInterface::class);
+        $router = self::createStub(UrlGeneratorInterface::class);
         $router->method('generate')
             ->willReturnCallback(
                 static fn (string $name, array $parameters = []): string => '/' . $name . ($parameters !== [] ? '?' . http_build_query($parameters) : '')
             );
 
-        $twig = $this->createStub(Environment::class);
+        $twig = self::createStub(Environment::class);
         $twig->method('render')
             ->willReturnCallback(function (string $template, array $context): string {
                 $this->renderedTemplate = $template;
@@ -83,7 +85,7 @@ final class BatchControllerTest extends TestCase
         $container->set('twig', $twig);
         $container->set('security.token_storage', $tokenStorage);
 
-        $csrf = $this->createStub(CsrfTokenManagerInterface::class);
+        $csrf = self::createStub(CsrfTokenManagerInterface::class);
         $csrf->method('isTokenValid')
             ->willReturnCallback(
                 static fn (CsrfToken $token): bool => $token->getId() === BatchController::CSRF_TOKEN_ID && $token->getValue() === self::TOKEN
@@ -91,7 +93,7 @@ final class BatchControllerTest extends TestCase
         $csrf->method('getToken')
             ->willReturn(new CsrfToken(BatchController::CSRF_TOKEN_ID, self::TOKEN));
 
-        $controller = new BatchController($this->createStub(Config::class));
+        $controller = new BatchController(self::createStub(Config::class));
         $controller->setContainer($container);
         $controller->setCsrfTokenManager($csrf);
 
@@ -103,7 +105,7 @@ final class BatchControllerTest extends TestCase
      */
     private function loader(array $config = []): AiAltConfigLoader
     {
-        $loader = $this->createStub(AiAltConfigLoader::class);
+        $loader = self::createStub(AiAltConfigLoader::class);
         $loader->method('load')
             ->willReturn(AiAltConfig::fromArray($config));
 
@@ -115,15 +117,20 @@ final class BatchControllerTest extends TestCase
      */
     private function finder(array $items = []): MissingAltFinder
     {
-        $finder = $this->createStub(MissingAltFinder::class);
+        $finder = self::createStub(MissingAltFinder::class);
         $finder->method('contentTypes')
             ->willReturn([
-                'pages' => ['slug' => 'pages', 'name' => 'Pages', 'defaultLocale' => 'cs', 'fields' => []],
+                'pages' => [
+                    'slug' => 'pages',
+                    'name' => 'Pages',
+                    'defaultLocale' => 'cs',
+                    'fields' => [],
+                ],
             ]);
         // Like the real finder: keep only items whose record passes $canEdit.
         $filter = static fn (?callable $canEdit): array => array_values(array_filter(
             $items,
-            static fn (array $item): bool => $canEdit === null || $canEdit(Fixtures::content(is_int($item['contentId'] ?? null) ? $item['contentId'] : 0))
+            static fn (array $item): bool => $canEdit === null || $canEdit(Fixtures::content(is_int($item['contentId'] ?? null) ? $item['contentId'] : 0)) === true
         ));
         $finder->method('find')
             ->willReturnCallback(static fn (?string $contentType = null, ?callable $canEdit = null): array => $filter($canEdit));
@@ -193,7 +200,7 @@ final class BatchControllerTest extends TestCase
         return $aiAlt;
     }
 
-    private function writer(?\Throwable $throw = null, int $expectedCalls = 1): AltWriter
+    private function writer(?Throwable $throw = null, int $expectedCalls = 1): AltWriter
     {
         $writer = $this->createMock(AltWriter::class);
         $expectation = $writer->expects(self::exactly($expectedCalls))->method('write');
@@ -229,7 +236,7 @@ final class BatchControllerTest extends TestCase
             'contentTypes' => [['slug' => 'pages', 'name' => 'Pages']],
         ], $config['batch']);
         self::assertIsString($this->renderedContext['configJson'] ?? null);
-        self::assertStringNotContainsString('<', (string) $this->renderedContext['configJson'], 'JSON is safe inside <script>');
+        self::assertStringNotContainsString('<', $this->renderedContext['configJson'], 'JSON is safe inside <script>');
     }
 
     public function testBatchPageSupportsBoltInASubdirectory(): void
@@ -268,7 +275,7 @@ final class BatchControllerTest extends TestCase
         yield 'control characters' => ["Bagr\x00na\x1Fstavbě\x7F", 'Bagr na stavbě'];
     }
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('alts')]
+    #[DataProvider('alts')]
     public function testSanitiseAlt(string $input, string $expected): void
     {
         self::assertSame($expected, BatchController::sanitiseAlt($input));
@@ -348,7 +355,7 @@ final class BatchControllerTest extends TestCase
      * @param array<string, mixed> $config
      * @param array<string, bool> $granted
      */
-    #[\PHPUnit\Framework\Attributes\DataProvider('saveGates')]
+    #[DataProvider('saveGates')]
     public function testSaveHonoursExtensionConfig(array $config, array $granted, string $message): void
     {
         $this->granted = $granted + $this->granted;
@@ -524,7 +531,7 @@ final class BatchControllerTest extends TestCase
     /**
      * @param array<string, mixed>|string $body
      */
-    #[\PHPUnit\Framework\Attributes\DataProvider('badRequests')]
+    #[DataProvider('badRequests')]
     public function testSaveRejectsBadRequests(array|string $body): void
     {
         $response = $this->controller()

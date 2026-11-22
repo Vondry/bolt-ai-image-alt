@@ -58,7 +58,7 @@ final class AltWriterTest extends TestCase
                 }
             });
 
-        $dispatcher = $this->createStub(EventDispatcherInterface::class);
+        $dispatcher = self::createStub(EventDispatcherInterface::class);
         $dispatcher->method('dispatch')
             ->willReturnCallback(function (object $event, ?string $name = null): object {
                 self::assertInstanceOf(ContentEvent::class, $event);
@@ -73,7 +73,12 @@ final class AltWriterTest extends TestCase
     private function page(): Content
     {
         $content = Fixtures::content(5);
-        Fixtures::addImage($content, 'image', ['cs' => ['filename' => 'a.jpg', 'alt' => '']], 'cs');
+        Fixtures::addImage($content, 'image', [
+            'cs' => [
+                'filename' => 'a.jpg',
+                'alt' => '',
+            ],
+        ], 'cs');
         Fixtures::addImagelist($content, 'gallery', [
             'cs' => [['filename' => 'g1.jpg', 'alt' => '']],
             'en' => [['filename' => 'g1.jpg', 'alt' => 'Filled']],
