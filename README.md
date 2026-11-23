@@ -27,6 +27,12 @@ Hugging Face (a few hundred MB) and cached by the browser.
 - UI in English, Czech, Slovak, German, French, Dutch, Italian, Spanish, Romanian, Ukrainian and Russian,
   following the backend user's language. Strings live in `assets/langs/<language>.json`; add a file to add a language.
 
+## Requirements
+
+- Bolt CMS 6, PHP 8.2 or newer
+- For editors: a desktop browser with WebGPU or WebAssembly; Chrome or Edge 138+ for translation (see
+  [Browser support](#browser-support))
+
 ## Installation
 
 ```bash
@@ -125,7 +131,7 @@ npm test               # Vitest (jsdom)
 npm run test:coverage
 
 vendor/bin/phpunit     # composer test:coverage for a coverage report
-vendor/bin/ecs check src tests/php
+vendor/bin/ecs check
 vendor/bin/phpstan analyse --memory-limit=1G
 vendor/bin/rector process --dry-run
 ```
