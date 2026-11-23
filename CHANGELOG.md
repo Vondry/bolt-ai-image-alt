@@ -6,6 +6,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.0.5] - 2026-11-23
+
 ### Changed
 
 - The `@ai-alt` Twig namespace is also registered at container level, in
@@ -78,7 +80,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   generation after upload, a batch page for missing alts, an "AI – please
   review" marker and a UI in 11 languages.
 
-[Unreleased]: https://github.com/Vondry/bolt-ai-image-alt/compare/v1.0.4...HEAD
+[Unreleased]: https://github.com/Vondry/bolt-ai-image-alt/compare/v1.0.5...HEAD
+[1.0.5]: https://github.com/Vondry/bolt-ai-image-alt/compare/v1.0.4...v1.0.5
 [1.0.4]: https://github.com/Vondry/bolt-ai-image-alt/compare/v1.0.3...v1.0.4
 [1.0.3]: https://github.com/Vondry/bolt-ai-image-alt/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/Vondry/bolt-ai-image-alt/compare/v1.0.1...v1.0.2
