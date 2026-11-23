@@ -6,8 +6,19 @@
     "keywords": ["bolt", "bolt-extension", "alt", "accessibility", "ai", "florence-2"],
     "authors": [
         {
-            "name": "Tomas Vondracek",
+            "name": "Tomáš Vondráček",
             "email": "tomasvondrac@gmail.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/Vondry/bolt-ai-image-alt/issues",
+        "source": "https://github.com/Vondry/bolt-ai-image-alt",
+        "security": "https://github.com/Vondry/bolt-ai-image-alt/security/policy"
+    },
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/Vondry"
         }
     ],
     "require": {

@@ -1,7 +1,8 @@
 version: 2
 
 updates:
-  # Keeps the actions used by the workflows current. One PR for all of them.
+  # The workflows pin actions to commit SHAs; this keeps the SHAs (and their version comments)
+  # current. One PR for all of them.
   - package-ecosystem: github-actions
     directory: /
     schedule:

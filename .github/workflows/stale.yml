@@ -1,4 +1,3 @@
----
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
 name: Close stale issues and PRs
 
@@ -17,6 +16,7 @@ jobs:
     name: Close stale issues and PRs
     runs-on: ubuntu-24.04
     permissions:
+      # actions/stale keeps its state in the Actions cache and deletes it again.
       actions: write
       issues: write
       pull-requests: write
