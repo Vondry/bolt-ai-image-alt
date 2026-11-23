@@ -1,2 +1,13 @@
-# Services of this extension are registered automatically by Bolt
-# (see config/services_bolt.yaml in the project). Nothing to add here.
+# Copied to config/packages/extension_bolt-ai-image-alt.yaml by `extensions:configure`.
+#
+# The extension's classes are auto-registered (autowired + autoconfigured) by
+# Bolt's generated config/services_bolt.yaml: the controller, the widget and the
+# backend menu (tagged by its #[AutoconfigureTag] attribute) need nothing here.
+
+# Register the @ai-alt Twig namespace at container level, so it resolves
+# everywhere: web requests, the CLI (`debug:twig`, `lint:twig`, `cache:warmup`).
+# `BaseExtension::addTwigNamespace()` only prepends the path to the running Twig
+# environment during a web request, which leaves the console without it.
+twig:
+  paths:
+    '%kernel.project_dir%/vendor/tomvondracek/bolt-ai-image-alt/templates': ai-alt
